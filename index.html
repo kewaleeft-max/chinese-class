@@ -3,135 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chinese Class Master 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Teacher Guan - Chinese Class Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    
     <style>
-        :root { --soft-pink: #FFC1CC; --sky-blue: #B3E5FC; --mint: #C8E6C9; --text: #5d4037; --bg: #FFFDE7; }
+        :root {
+            --lime: #DCFD8B; --peach: #FDD5BD; --purple: #BC84EE; --orange: #FF823A;
+            --soft-white: #f8fafc; --text-dark: #1e293b; --shadow: rgba(0, 0, 0, 0.08);
+        }
         * { box-sizing: border-box; font-family: 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        h1, h2, h3 { font-family: 'Comfortaa', cursive; margin: 0; }
         
-        .app-container { width: 100%; max-width: 414px; height: 100vh; background: var(--bg); position: relative; border-radius: 30px; overflow: hidden; border: 8px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-        .page { display: none; flex-direction: column; height: 100%; padding: 18px; overflow-y: auto; padding-bottom: 110px; }
+        body { margin: 0; background-color: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+        .app-container { 
+            width: 100%; max-width: 414px; height: 100vh; background-color: var(--soft-white); 
+            position: relative; border-radius: 40px; overflow: hidden; border: 10px solid white; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
+        }
+
+        .page { display: none; flex-direction: column; height: 100%; padding: 25px; overflow-y: auto; padding-bottom: 120px; z-index: 1; }
         .page.active { display: flex; }
-        
-        .card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 12px; text-align: center; }
-        .news-bar { background: #fff9c4; border-left: 5px solid #fbc02d; padding: 10px; border-radius: 12px; font-size: 13px; margin-bottom: 12px; text-align: left; }
 
-        /* --- ข้อ 3 ปรับปรุง Avatar 10 แบบให้พอดีสวยงาม --- */
-        .av-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 5px; margin: 15px 0; }
-        .av-item { background: #fff; border: 3px solid #f0f0f0; border-radius: 20px; padding: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card { background: white; border-radius: 30px; padding: 20px; box-shadow: 0 10px 25px var(--shadow); margin-bottom: 15px; position: relative; }
+
+        /* Avatar Selection */
+        .av-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 15px 0; }
+        .av-item { 
+            background: white; border: 4px solid #f1f5f9; border-radius: 25px; padding: 10px; 
+            cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center;
+        }
         .av-item img { width: 75px; height: 75px; object-fit: contain; }
-        .av-item.selected { border-color: var(--soft-pink); background: #fff0f3; transform: translateY(-5px); box-shadow: 0 8px 15px rgba(255, 193, 204, 0.3); }
+        .av-item.selected { border-color: var(--orange); background: #fffcf0; transform: translateY(-8px); box-shadow: 0 10px 20px rgba(255,130,58,0.2); }
 
-        /* --- ปรับปรุงคลังคำศัพท์ไม่ให้ตกขอบ --- */
-        .vocab-section { margin-top: 15px; text-align: left; }
-        .cat-title { background: var(--soft-pink); color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
-        .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .vocab-card { background: white; border: 2px solid #f0f0f0; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .vocab-card b { font-size: 28px; color: var(--text); word-break: break-all; }
+        /* Evolution Track */
+        .evo-track { width: 100%; height: 10px; background: #f1f5f9; border-radius: 5px; margin-top: 10px; overflow: hidden; }
+        .evo-fill { height: 100%; background: var(--orange); transition: 1s width; width: 0%; }
 
-        /* Buttons & Nav */
-        .btn-skill { border: none; padding: 16px; border-radius: 18px; color: white; font-weight: 600; cursor: pointer; font-size: 15px; width: 100%; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
-        .btn-skill:active { transform: translateY(3px); box-shadow: none; }
-        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 12px 0 32px; position: absolute; bottom: 0; width: 100%; border-top: 1px solid #f0f0f0; z-index: 100; }
-        .nav-item { text-align: center; color: #ccc; cursor: pointer; font-size: 11px; }
-        .nav-item.active { color: var(--soft-pink); font-weight: bold; }
+        .btn-skill { 
+            border: none; padding: 18px; border-radius: 25px; color: white; font-weight: 600; 
+            cursor: pointer; font-size: 16px; box-shadow: 0 6px 0 rgba(0,0,0,0.1); 
+            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+        }
+        .btn-skill:active { transform: translateY(4px); box-shadow: none; }
 
-        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 8px; outline: none; font-size: 14px; background: #fafafa; }
+        .nav-bar { 
+            background: white; display: grid; grid-template-columns: repeat(3, 1fr); 
+            padding: 15px 0 35px; position: absolute; bottom: 0; width: 100%; 
+            border-radius: 40px 40px 0 0; box-shadow: 0 -10px 30px var(--shadow); z-index: 10;
+        }
+        .nav-item { text-align: center; color: #cbd5e1; cursor: pointer; font-size: 12px; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
+        .nav-item.active { color: var(--purple); font-weight: bold; }
+
+        input, select { width: 100%; padding: 14px; border-radius: 18px; border: 2px solid #f1f5f9; margin-bottom: 10px; outline: none; background: #fcfcfc; }
+        
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,41,59,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 30px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="page-login" class="page active">
-        <h2 style="text-align: center; color: var(--soft-pink);">ห้องเรียน 关老师 🐼</h2>
-        <div class="card">
+        <h2 style="text-align: center; color: var(--orange); font-size: 30px; margin-top: 10px;">Teacher Guan</h2>
+        <div class="card" style="margin-top: 15px;">
             <input type="text" id="u-name" placeholder="ชื่อเล่นของหนู...">
             <select id="u-class-select"><option value="">กำลังโหลดห้องเรียน...</option></select>
-            <p style="font-size: 12px; color: #999; margin-top: 10px;">เลือก "คู่หู" ที่หนูชอบที่สุด:</p>
+            <p style="font-size: 12px; color: #94a3b8; font-weight: 600; margin: 15px 0 10px;">✨ เลือกคู่หูของหนู (10 แบบ):</p>
             <div class="av-grid">
-                <div class="av-item" onclick="selAv(this, 'panda')"><img src="https://img.icons8.com/clouds/150/panda.png"></div>
-                <div class="av-item" onclick="selAv(this, 'rabbit')"><img src="https://img.icons8.com/clouds/150/rabbit.png"></div>
-                <div class="av-item" onclick="selAv(this, 'chick')"><img src="https://img.icons8.com/clouds/150/chick.png"></div>
-                <div class="av-item" onclick="selAv(this, 'monkey')"><img src="https://img.icons8.com/clouds/150/monkey.png"></div>
-                <div class="av-item" onclick="selAv(this, 'koala')"><img src="https://img.icons8.com/clouds/150/koala.png"></div>
-                <div class="av-item" onclick="selAv(this, 'apple')"><img src="https://img.icons8.com/clouds/150/apple.png"></div>
-                <div class="av-item" onclick="selAv(this, 'tangerine')"><img src="https://img.icons8.com/clouds/150/tangerine.png"></div>
-                <div class="av-item" onclick="selAv(this, 'banana')"><img src="https://img.icons8.com/clouds/150/banana.png"></div>
-                <div class="av-item" onclick="selAv(this, 'grape')"><img src="https://img.icons8.com/clouds/150/grape.png"></div>
-                <div class="av-item" onclick="selAv(this, 'strawberry')"><img src="https://img.icons8.com/clouds/150/strawberry.png"></div>
+                <div class="av-item" onclick="selAv(this, 'panda')"><img src="https://img.icons8.com/clouds/150/panda.png"><span>แพนด้า</span></div>
+                <div class="av-item" onclick="selAv(this, 'rabbit')"><img src="https://img.icons8.com/clouds/150/rabbit.png"><span>กระต่าย</span></div>
+                <div class="av-item" onclick="selAv(this, 'chick')"><img src="https://img.icons8.com/clouds/150/chick.png"><span>กุ๊กไก่</span></div>
+                <div class="av-item" onclick="selAv(this, 'monkey')"><img src="https://img.icons8.com/clouds/150/monkey.png"><span>เจ้าลิง</span></div>
+                <div class="av-item" onclick="selAv(this, 'koala')"><img src="https://img.icons8.com/clouds/150/koala.png"><span>โคล่า</span></div>
+                <div class="av-item" onclick="selAv(this, 'apple')"><img src="https://img.icons8.com/clouds/150/apple.png"><span>แอปเปิ้ล</span></div>
+                <div class="av-item" onclick="selAv(this, 'tangerine')"><img src="https://img.icons8.com/clouds/150/tangerine.png"><span>ส้ม</span></div>
+                <div class="av-item" onclick="selAv(this, 'banana')"><img src="https://img.icons8.com/clouds/150/banana.png"><span>กล้วย</span></div>
+                <div class="av-item" onclick="selAv(this, 'grape')"><img src="https://img.icons8.com/clouds/150/grape.png"><span>องุ่น</span></div>
+                <div class="av-item" onclick="selAv(this, 'strawberry')"><img src="https://img.icons8.com/clouds/150/strawberry.png"><span>เบอร์รี่</span></div>
             </div>
-            <button class="btn-skill" style="background:var(--soft-pink);" onclick="login()">เข้าเรียนกันเลย! ➔</button>
+            <button class="btn-skill" style="background: var(--purple);" onclick="login()">เข้าห้องเรียน ➔</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
-        <div id="news-bar" class="news-bar" style="display:none;">📢 <span id="news-txt"></span></div>
-        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:10px;">
-            <span>💎 <b><span id="score">0</span></b></span>
-            <span id="room-tag" style="background:var(--sky-blue); padding:2px 10px; border-radius:10px; font-size:11px; font-weight:bold;">...</span>
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:15px;">
+            <span style="background: white; padding: 5px 15px; border-radius: 15px; font-weight: 700;">💎 <span id="score">0</span></span>
+            <span id="room-tag" style="background: var(--lime); padding: 5px 15px; border-radius: 15px; font-size: 11px; font-weight: 700;">...</span>
         </div>
-        <div class="card">
-            <img id="pet-img" src="" style="height:90px;">
-            <div id="pet-status" style="font-size:11px; font-weight:bold; color:var(--soft-pink);">ร่างไข่</div>
-            <hr style="border:0; border-top:1px solid #f9f9f9; margin:10px 0;">
-            <div id="main-cat" style="font-size:11px; color:var(--soft-pink); font-weight:bold;">หมวดหมู่</div>
-            <div id="main-word" style="font-size:45px; font-weight:bold; color:var(--text);">...</div>
+        
+        <div class="card" style="text-align: center;">
+            <img id="pet-img" src="" style="height:110px; transition: 0.5s transform;">
+            <h3 id="pet-status" style="font-size: 16px; margin-top: 10px; color: var(--orange);">ร่างไข่</h3>
+            <div class="evo-track"><div id="pet-fill" class="evo-fill"></div></div>
+            <hr style="border:0; border-top:2px solid #f8fafc; margin:20px 0;">
+            <p id="main-cat" style="font-size: 11px; font-weight: bold; color: var(--purple);">บทเรียนวันนี้</p>
+            <h1 id="main-word" style="font-size: 55px; color: var(--text-dark);">...</h1>
         </div>
+        
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="btn-skill" onclick="goLink('read')" style="background:var(--sky-blue);">📖 อ่าน</button>
-            <button class="btn-skill" onclick="goLink('listen')" style="background:var(--mint);">🎧 ฟัง</button>
-            <button class="btn-skill" onclick="goLink('speak')" style="background:#fff176; color:#5d4037;">🗣️ พูด</button>
-            <button class="btn-skill" onclick="goLink('write')" style="background:var(--soft-pink);">✍️ เขียน</button>
+            <button class="btn-skill" onclick="goLink('read')" style="background:#B3E5FC;"><i class="fa-solid fa-book"></i> อ่าน</button>
+            <button class="btn-skill" onclick="goLink('listen')" style="background:#C8E6C9;"><i class="fa-solid fa-headphones"></i> ฟัง</button>
+            <button class="btn-skill" onclick="goLink('speak')" style="background:#FFF176; color:#5d4037;"><i class="fa-solid fa-comment"></i> พูด</button>
+            <button class="btn-skill" onclick="goLink('write')" style="background:var(--peach);"><i class="fa-solid fa-pen-nib"></i> เขียน</button>
         </div>
     </div>
 
     <div id="page-vocab" class="page">
-        <h3 style="text-align: center; color:var(--soft-pink);">📚 คลังคำศัพท์</h3>
+        <h2 style="text-align: center; color: var(--purple); margin-bottom: 15px;">คลังคำศัพท์</h2>
         <div id="vocab-list"></div>
     </div>
 
     <div id="page-board" class="page">
-        <h3 style="text-align: center; color:var(--soft-pink);">🏆 อันดับห้อง <span id="board-title"></span></h3>
+        <h2 style="text-align: center; color: var(--orange); margin-bottom: 15px;">ดาวเด่นห้อง <span id="board-title"></span></h2>
         <div id="leaderboard"></div>
     </div>
 
     <div id="page-admin" class="page">
-        <h3>⚙️ ตั้งค่าระบบคุณครู</h3>
+        <h3>Admin Settings</h3>
         <div class="card" style="text-align:left; font-size:13px;">
-            <b>จัดการห้องเรียน (คั่นด้วย ,)</b>
-            <input type="text" id="adm-rooms">
+            <b>ห้องเรียน:</b> <input type="text" id="adm-rooms">
             <hr>
-            <b>อัปเดตบทเรียนปัจจุบัน</b>
-            <input type="text" id="adm-news" placeholder="ประกาศ">
-            <input type="text" id="adm-cat" placeholder="หมวดหมู่">
-            <input type="text" id="adm-word" placeholder="ตัวจีน">
+            <b>รหัสลับผ่านด่าน:</b> <input type="text" id="adm-code">
+            <b>บทเรียน/ตัวจีน:</b> <input type="text" id="adm-cat"><input type="text" id="adm-word">
             <hr>
-            <b>ลิงก์ทักษะทั้ง 4</b>
-            <input type="text" id="l-r" placeholder="ลิงก์อ่าน">
-            <input type="text" id="l-l" placeholder="ลิงก์ฟัง">
-            <input type="text" id="l-s" placeholder="ลิงก์พูด">
-            <input type="text" id="l-w" placeholder="ลิงก์เขียน">
-            <button class="btn-skill" style="background:var(--mint); margin-top:10px;" onclick="saveAdmin()">บันทึกข้อมูลทั้งหมด ➔</button>
+            <b>ลิงก์ทักษะ:</b>
+            <input type="text" id="l-r" placeholder="Read"><input type="text" id="l-l" placeholder="Listen">
+            <input type="text" id="l-s" placeholder="Speak"><input type="text" id="l-w" placeholder="Write">
+            <button class="btn-skill" style="background:var(--purple);" onclick="saveAdmin()">บันทึก ➔</button>
         </div>
-        <button class="btn-skill" style="background:#999;" onclick="nav('page-home')">กลับ</button>
+        <button class="btn-skill" style="background:#94a3b8; margin-top:10px;" onclick="nav('page-home')">กลับ</button>
     </div>
 
     <div id="nav-bar" class="nav-bar" style="display:none;">
-        <div class="nav-item active" onclick="nav('page-home', this)">🏠 เรียน</div>
-        <div class="nav-item" onclick="nav('page-vocab', this)">📚 ศัพท์</div>
-        <div class="nav-item" onclick="nav('page-board', this)">🏆 อันดับ</div>
+        <div class="nav-item active" onclick="nav('page-home', this)"><i class="fa-solid fa-star"></i>เรียน</div>
+        <div class="nav-item" onclick="nav('page-vocab', this)"><i class="fa-solid fa-book-open"></i>คลังศัพท์</div>
+        <div class="nav-item" onclick="nav('page-board', this)"><i class="fa-solid fa-trophy"></i>อันดับ</div>
     </div>
 
     <div id="web-overlay" class="overlay">
-        <div style="padding:10px; background:#f9f9f9; display:flex; justify-content:space-between; align-items:center;">
-            <b>กำลังฝึกทักษะ...</b>
-            <button onclick="closeWeb()" style="border:none; background:#ff5252; color:white; padding:5px 15px; border-radius:10px;">เสร็จแล้ว X</button>
+        <div style="padding:15px; background:white; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee;">
+            <b style="color:var(--purple);">ตั้งใจทำนะจ๊ะ...</b>
+            <button onclick="finishSkill()" style="border:none; background:var(--orange); color:white; padding:8px 20px; border-radius:15px; font-weight:bold;">ส่งงาน X</button>
         </div>
         <iframe id="web-frame" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+
+    <div id="modal-code" class="modal">
+        <div class="card" style="width:100%; max-width:300px; text-align:center;">
+            <h2 style="color: var(--purple);">🔓 ใส่รหัสลับ</h2>
+            <p style="font-size: 11px; color: #94a3b8; margin-bottom: 15px;">พิมพ์รหัสที่ได้จากแบบฝึกหัดนะจ๊ะ</p>
+            <input type="text" id="input-code" placeholder="รหัสคืออะไร..." style="text-align:center; font-size:22px; font-weight:bold; color:var(--orange);">
+            <button class="btn-skill" style="background: var(--purple);" onclick="verifyCode()">รับเพชร 💎</button>
+            <button style="border:none; background:none; color:#94a3b8; margin-top:10px;" onclick="closeModal()">ยังไม่ทำจ๊ะ</button>
+        </div>
     </div>
 </div>
 
@@ -157,7 +186,7 @@
     }
 
     db.ref('settings/rooms').on('value', (s) => {
-        const rooms = s.val() ? s.val().split(',') : ['ห้อง A', 'ห้อง B'];
+        const rooms = s.val() ? s.val().split(',') : ['ห้อง A'];
         const select = document.getElementById('u-class-select');
         select.innerHTML = "";
         rooms.forEach(r => { select.innerHTML += `<option value="${r.trim()}">${r.trim()}</option>`; });
@@ -167,18 +196,24 @@
     function login() {
         user.name = document.getElementById('u-name').value;
         user.class = document.getElementById('u-class-select').value;
-        if(!user.name || !user.pet) return alert("กรุณาระบุชื่อและเลือกคู่หูก่อนนะจ๊ะ");
-        document.getElementById('room-tag').innerText = user.class;
-        document.getElementById('board-title').innerText = user.class;
-        document.getElementById('nav-bar').style.display = 'grid';
-        nav('page-home'); updatePetUI(); sync(); listenBoard();
+        if(!user.name || !user.pet) return alert("เลือกชื่อและสัตว์เลี้ยงก่อนนะจ๊ะ");
+        db.ref(`students/${user.class}/${user.name}`).once('value', (s) => {
+            if(s.exists()) user = s.val();
+            document.getElementById('score').innerText = user.coins;
+            document.getElementById('room-tag').innerText = user.class;
+            document.getElementById('board-title').innerText = user.class;
+            document.getElementById('nav-bar').style.display = 'grid';
+            nav('page-home'); updatePet(); listenBoard(); sync();
+        });
     }
 
-    function updatePetUI() {
-        const img = document.getElementById('pet-img');
-        const status = document.getElementById('pet-status');
-        if(user.coins < 50) { img.src="https://img.icons8.com/clouds/200/egg.png"; status.innerText="ร่างไข่"; }
-        else { img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`; status.innerText="ร่างตัวน้อย"; }
+    function updatePet() {
+        const img = document.getElementById('pet-img'), status = document.getElementById('pet-status'), fill = document.getElementById('pet-fill');
+        let p = (user.coins / 200) * 100;
+        if(user.coins < 50) { img.src="https://img.icons8.com/clouds/200/egg.png"; status.innerText="ร่างไข่แสนรู้"; }
+        else if(user.coins < 150) { img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`; img.style.transform="scale(0.8)"; status.innerText="ร่างตัวน้อยแสนซน"; }
+        else { img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`; img.style.transform="scale(1.1)"; status.innerText="ร่างสมบูรณ์สุดเท่!"; p=100; }
+        fill.style.width = p + "%";
     }
 
     function sync() { if(user.name) db.ref(`students/${user.class}/${user.name}`).set(user); }
@@ -186,32 +221,38 @@
     function goLink(type) {
         const link = curData[type + 'Link'];
         if(link) { document.getElementById('web-overlay').style.display = 'flex'; document.getElementById('web-frame').src = link; }
-        else alert("รอคุณครูเพิ่มลิงก์จ๊ะ");
+        else alert("รอครูลงลิงก์นะจ๊ะ");
     }
 
-    function closeWeb() {
+    function finishSkill() {
         document.getElementById('web-overlay').style.display = 'none';
         document.getElementById('web-frame').src = "";
-        user.coins += 10; document.getElementById('score').innerText = user.coins;
-        sync(); updatePetUI();
+        document.getElementById('modal-code').style.display = 'flex';
     }
+
+    function verifyCode() {
+        if(document.getElementById('input-code').value === curData.secretCode) {
+            user.coins += 20; document.getElementById('score').innerText = user.coins;
+            alert("เก่งมาก! รับ 20 💎"); sync(); updatePet(); closeModal();
+        } else alert("รหัสผิดจ๊ะ ลองใหม่นะ!");
+    }
+
+    function closeModal() { document.getElementById('modal-code').style.display = 'none'; document.getElementById('input-code').value = ""; }
 
     db.ref('master').on('value', (s) => {
         curData = s.val() || {};
-        document.getElementById('main-word').innerText = curData.word || "ยินดีต้อนรับ";
-        document.getElementById('main-cat').innerText = "หมวด: " + (curData.cat || "ทั่วไป");
-        document.getElementById('news-bar').style.display = curData.news ? 'block' : 'none';
-        document.getElementById('news-txt').innerText = curData.news || "";
+        document.getElementById('main-word').innerText = curData.word || "สวัสดี";
+        document.getElementById('main-cat').innerText = curData.cat || "บทเรียนใหม่";
+        document.getElementById('adm-code').value = curData.secretCode || "";
     });
 
     db.ref('vocab_bank').on('value', (s) => {
         const list = document.getElementById('vocab-list'); list.innerHTML = "";
         const data = s.val(); if(!data) return;
-        const cats = {};
-        Object.values(data).forEach(v => { if(!cats[v.cat]) cats[v.cat] = []; cats[v.cat].push(v.word); });
+        const cats = {}; Object.values(data).forEach(v => { if(!cats[v.cat]) cats[v.cat] = []; cats[v.cat].push(v.word); });
         for(let c in cats) {
-            let sec = `<div class="vocab-section"><div class="cat-title">📂 หมวด ${c}</div><div class="vocab-grid">`;
-            cats[c].forEach(w => { sec += `<div class="vocab-card"><b>${w}</b></div>`; });
+            let sec = `<div style="margin-top:15px;"><span style="background:var(--purple); color:white; padding:4px 12px; border-radius:15px; font-size:11px;">📂 ${c}</span><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">`;
+            cats[c].forEach(w => sec += `<div class="card" style="margin:0; padding:12px; font-size:22px; font-weight:bold;">${w}</div>`);
             list.innerHTML += sec + `</div></div>`;
         }
     });
@@ -221,26 +262,25 @@
             const list = document.getElementById('leaderboard'); list.innerHTML = "";
             let arr = []; s.forEach(c => arr.push(c.val()));
             arr.reverse().forEach((st, i) => {
-                list.innerHTML += `<div style="display:flex; align-items:center; background:white; padding:10px; border-radius:15px; margin-bottom:8px;">
+                list.innerHTML += `<div class="card" style="display:flex; align-items:center; padding:10px 15px; margin-bottom:10px;">
                     <b style="width:25px;">${i+1}</b>
-                    <img src="https://img.icons8.com/clouds/100/${st.pet}.png" width="35">
-                    <div style="flex:1; margin-left:10px;">${st.name}</div><b>${st.coins} 💎</b>
+                    <img src="https://img.icons8.com/clouds/100/${st.pet}.png" width="35" style="margin-right:10px;">
+                    <div style="flex:1; font-weight:600;">${st.name}</div><b>${st.coins} 💎</b>
                 </div>`;
             });
         });
     }
 
     function saveAdmin() {
-        const w = document.getElementById('adm-word').value;
-        const c = document.getElementById('adm-cat').value;
+        const w = document.getElementById('adm-word').value, c = document.getElementById('adm-cat').value;
         db.ref('settings/rooms').set(document.getElementById('adm-rooms').value);
-        db.ref('master').set({
-            word: w, cat: c, news: document.getElementById('adm-news').value,
+        db.ref('master').update({
+            word: w, cat: c, secretCode: document.getElementById('adm-code').value,
             readLink: document.getElementById('l-r').value, listenLink: document.getElementById('l-l').value,
             speakLink: document.getElementById('l-s').value, writeLink: document.getElementById('l-w').value
         });
         if(w && c) db.ref('vocab_bank').push({ word: w, cat: c });
-        alert("อัปเดตระบบเรียบร้อยครับคุณครู!");
+        alert("บันทึกแล้วจ้า!");
     }
 
     function nav(id, el) {
@@ -252,7 +292,7 @@
     let adminC = 0;
     document.body.addEventListener('click', (e) => {
         if(e.clientX > window.innerWidth-60 && e.clientY > window.innerHeight-60) {
-            adminC++; if(adminC === 3) { adminC=0; if(prompt("รหัสครู")==="1234") nav('page-admin'); }
+            adminC++; if(adminC === 3) { adminC=0; if(prompt("Pass?")==="1234") nav('page-admin'); }
         } else adminC = 0;
     });
 </script>
