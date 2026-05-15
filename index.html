@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Class Real-time - Sound Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    
+    <style>
+        :root { --bg-cream: #FFFDD0; --soft-pink: #FFB7C5; --sky-blue: #AEC6CF; --mint: #B2E2D2; --white: #ffffff; }
+        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; transition: 0.3s; }
+        body { margin: 0; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app-container { width: 100%; max-width: 400px; height: 100vh; max-height: 850px; background-color: var(--bg-cream); position: relative; display: flex; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 30px; overflow: hidden; }
+        .page { display: none; flex-direction: column; height: 100%; padding: 20px; overflow-y: auto; padding-bottom: 110px; }
+        .page.active { display: flex; }
+        .card { background: var(--white); border-radius: 25px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: center; }
+        .btn-primary { background: var(--soft-pink); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 600; box-shadow: 0 4px 0 #e8a0af; font-size: 16px; margin-top: 10px; }
+        input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; margin-bottom: 10px; outline: none; }
+        
+        /* Avatar Grid */
+        .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .avatar-item { width: 100%; aspect-ratio: 1/1; border-radius: 15px; border: 3px solid transparent; cursor: pointer; object-fit: cover; background: #f9f9f9; }
+        .avatar-item.selected { border-color: var(--soft-pink); background: #fff0f3; transform: scale(1.05); }
+        
+        /* Admin Table */
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+        .admin-avatar { width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 8px; }
+        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 12px 0 28px; position: absolute; bottom: 0; width: 100%; border-radius: 30px 30px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100; }
+        .nav-item { text-align: center; color: #ccc; cursor: pointer; font-size: 12px; }
+        .nav-item.active { color: var(--soft-pink); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="page-login" class="page active">
+        <h2 style="text-align: center; color: var(--soft-pink); margin-top: 20px;">เรียนจีนกับ关老师</h2>
+        <div class="card">
+            <input type="text" id="user-name" placeholder="ระบุชื่อเล่นจ๊ะ...">
+            <p style="font-size: 14px; color: #888;">เลือกตัวละครที่ออกแบบไว้:</p>
+            <div class="avatar-grid">
+                <img src="https://cdn-icons-png.flaticon.com/512/235/235359.png" class="avatar-item" onclick="pickAvatar(this)">
+                <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" class="avatar-item" onclick="pickAvatar(this)">
+                <img src="https://cdn-icons-png.flaticon.com/512/2664/2664531.png" class="avatar-item" onclick="pickAvatar(this)">
+            </div>
+            <button class="btn-primary" onclick="doLogin()">เริ่มเรียนเลย! ➔</button>
+        </div>
+    </div>
+
+    <div id="page-home" class="page">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold;">💎 <span id="coins">0</span></span>
+            <span style="background: var(--mint); padding: 4px 12px; border-radius: 15px; color:white;">⭐ Lv. 1</span>
+        </div>
+        <div class="card" style="margin-top:20px;">
+            <div>สวัสดีจ๊ะ <span id="display-name" style="font-weight: 600; color: var(--soft-pink);"></span></div>
+            <img id="user-mascot" src="" width="140" style="margin: 10px 0;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--sky-blue); box-shadow: 0 4px 0 #89a8b5;">📖 อ่าน</button>
+            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--mint); box-shadow: 0 4px 0 #8ecbb8;">🎧 ฟัง</button>
+            <button class="btn-primary" onclick="getPoints(10)" style="background:#ffd93d; box-shadow: 0 4px 0 #e6c337;">🗣️ พูด</button>
+            <button class="btn-primary" onclick="getPoints(20)" style="background:var(--soft-pink); box-shadow: 0 4px 0 #e8a0af;">✍️ เขียน</button>
+        </div>
+    </div>
+
+    <div id="page-admin" class="page">
+        <h3 style="color: var(--soft-pink);">📊 ตารางคะแนน Real-time</h3>
+        <div class="card" style="padding: 10px;">
+            <table>
+                <thead><tr style="color: #888;"><th>อวตาร</th><th>ชื่อ</th><th>💎</th></tr></thead>
+                <tbody id="score-body"></tbody>
+            </table>
+        </div>
+        <button class="btn-primary" onclick="navTo('page-home')" style="background:gray;">กลับหน้าหลัก</button>
+    </div>
+
+    <div class="nav-bar" id="main-nav" style="display:none;">
+        <div class="nav-item active" onclick="navTo('page-home', this)">🏠<br>หน้าหลัก</div>
+        <div class="nav-item" style="opacity: 0.3;">📚<br>บทเรียน</div>
+        <div class="nav-item" onclick="checkAdmin(this)">⚙️<br>จัดการ</div>
+    </div>
+</div>
+
+<script>
+    // --- ระบบเสียง (Sound Engine) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        
+        if(type === 'success') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    // --- Firebase & Logic ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAupdP390vgrb_r1JzMAWbxNCfR3Gf8f-E",
+      authDomain: "chineseclass-teacherguan.firebaseapp.com",
+      projectId: "chineseclass-teacherguan",
+      storageBucket: "chineseclass-teacherguan.appspot.com",
+      messagingSenderId: "49788025312",
+      appId: "1:49788025312:web:124a9332d523de1f8e137c",
+      databaseURL: "https://chineseclass-teacherguan-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    let user = { name: "", coins: 0, avatar: "" };
+
+    function pickAvatar(img) {
+        playSound('success');
+        document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
+        user.avatar = img.src;
+    }
+
+    function doLogin() {
+        const name = document.getElementById('user-name').value;
+        if(!name || !user.avatar) { playSound('error'); return alert("เลือกชื่อและตัวละครก่อนจ๊ะ!"); }
+        user.name = name;
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('user-mascot').src = user.avatar;
+        document.getElementById('main-nav').style.display = 'grid';
+        navTo('page-home');
+        sync();
+    }
+
+    function getPoints(pts) {
+        user.coins += pts;
+        document.getElementById('coins').innerText = user.coins;
+        playSound('success');
+        sync();
+    }
+
+    function sync() {
+        if(!user.name) return;
+        db.ref('students/' + user.name).set({
+            name: user.name, coins: user.coins, avatar: user.avatar,
+            lastUpdate: new Date().toLocaleTimeString()
+        });
+    }
+
+    function checkAdmin(el) {
+        if(prompt("รหัสครู:") === "1234") {
+            navTo('page-admin', el);
+            db.ref('students').on('value', (s) => {
+                const data = s.val();
+                const tbody = document.getElementById('score-body');
+                tbody.innerHTML = "";
+                for(let id in data) {
+                    tbody.innerHTML += `<tr><td><img src="" class="admin-avatar"></td><td></td><td>💎 </td></tr>`;
+                }
+            });
+        }
+    }
+
+    function navTo(id, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(el) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+        }
+    }
+</script>
+</body>
+</html>
