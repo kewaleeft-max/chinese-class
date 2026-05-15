@@ -3,111 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Class Real-time - Sound Edition</title>
+    <title>Chinese Class - Happy Learning</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
-    
     <style>
-        :root { --bg-cream: #FFFDD0; --soft-pink: #FFB7C5; --sky-blue: #AEC6CF; --mint: #B2E2D2; --white: #ffffff; }
+        :root { --bg-cream: #FFFDE7; --soft-pink: #FFC1CC; --sky-blue: #B3E5FC; --mint: #C8E6C9; --white: #ffffff; }
         * { box-sizing: border-box; font-family: 'Kanit', sans-serif; transition: 0.3s; }
-        body { margin: 0; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .app-container { width: 100%; max-width: 400px; height: 100vh; max-height: 850px; background-color: var(--bg-cream); position: relative; display: flex; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 30px; overflow: hidden; }
-        .page { display: none; flex-direction: column; height: 100%; padding: 20px; overflow-y: auto; padding-bottom: 110px; }
+        body { margin: 0; background-color: #fcfcfc; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app-container { width: 100%; max-width: 400px; height: 100vh; max-height: 850px; background-color: var(--bg-cream); position: relative; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 35px; overflow: hidden; border: 8px solid white; }
+        .page { display: none; flex-direction: column; height: 100%; padding: 25px; overflow-y: auto; padding-bottom: 120px; }
         .page.active { display: flex; }
-        .card { background: var(--white); border-radius: 25px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: center; }
-        .btn-primary { background: var(--soft-pink); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 600; box-shadow: 0 4px 0 #e8a0af; font-size: 16px; margin-top: 10px; }
-        input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; margin-bottom: 10px; outline: none; }
-        
-        /* Avatar Grid */
-        .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .avatar-item { width: 100%; aspect-ratio: 1/1; border-radius: 15px; border: 3px solid transparent; cursor: pointer; object-fit: cover; background: #f9f9f9; }
-        .avatar-item.selected { border-color: var(--soft-pink); background: #fff0f3; transform: scale(1.05); }
-        
-        /* Admin Table */
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
-        .admin-avatar { width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 8px; }
-        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 12px 0 28px; position: absolute; bottom: 0; width: 100%; border-radius: 30px 30px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100; }
-        .nav-item { text-align: center; color: #ccc; cursor: pointer; font-size: 12px; }
+        .card { background: var(--white); border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; text-align: center; }
+        .btn-primary { background: var(--soft-pink); color: white; border: none; padding: 16px; border-radius: 20px; cursor: pointer; width: 100%; font-weight: 600; box-shadow: 0 5px 0 #efabb7; font-size: 18px; margin-top: 10px; }
+        .btn-primary:active { transform: translateY(4px); box-shadow: none; }
+        input, textarea { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #f0f0f0; margin-bottom: 15px; outline: none; font-size: 16px; text-align: center; }
+        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 15px 0 35px; position: absolute; bottom: 0; width: 100%; border-radius: 35px 35px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; color: #ddd; cursor: pointer; font-size: 12px; }
         .nav-item.active { color: var(--soft-pink); font-weight: bold; }
+        .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .avatar-item { width: 100%; aspect-ratio: 1/1; border-radius: 20px; border: 4px solid transparent; cursor: pointer; object-fit: cover; background: #fff; padding: 5px; }
+        .avatar-item.selected { border-color: var(--soft-pink); background: #fff5f7; transform: scale(1.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+        .status-badge { background: var(--soft-pink); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; display: inline-block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="page-login" class="page active">
-        <h2 style="text-align: center; color: var(--soft-pink); margin-top: 20px;">เรียนจีนกับ关老师</h2>
+        <h2 style="text-align: center; color: var(--soft-pink); margin-bottom: 5px;">เรียนจีนกับ关老师</h2>
+        <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 20px;">ยินดีต้อนรับเข้าสู่ห้องเรียนจ๊ะ</p>
         <div class="card">
-            <input type="text" id="user-name" placeholder="ระบุชื่อเล่นจ๊ะ...">
-            <p style="font-size: 14px; color: #888;">เลือกตัวละครที่ออกแบบไว้:</p>
+            <input type="text" id="user-name" placeholder="ใส่ชื่อเล่นของหนูนะ...">
+            <p style="font-size: 14px; color: #888;">เลือกเพื่อนคู่ใจ:</p>
             <div class="avatar-grid">
-                <img src="https://cdn-icons-png.flaticon.com/512/235/235359.png" class="avatar-item" onclick="pickAvatar(this)">
-                <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" class="avatar-item" onclick="pickAvatar(this)">
-                <img src="https://cdn-icons-png.flaticon.com/512/2664/2664531.png" class="avatar-item" onclick="pickAvatar(this)">
+                <img src="https://img.icons8.com/clouds/200/panda.png" class="avatar-item" onclick="pickAvatar(this)">
+                <img src="https://img.icons8.com/clouds/200/rabbit.png" class="avatar-item" onclick="pickAvatar(this)">
+                <img src="https://img.icons8.com/clouds/200/chick.png" class="avatar-item" onclick="pickAvatar(this)">
             </div>
-            <button class="btn-primary" onclick="doLogin()">เริ่มเรียนเลย! ➔</button>
+            <button class="btn-primary" onclick="doLogin()">เริ่มสนุกกันเลย! ➔</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
         <div style="display:flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: bold;">💎 <span id="coins">0</span></span>
-            <span style="background: var(--mint); padding: 4px 12px; border-radius: 15px; color:white;">⭐ Lv. 1</span>
+            <span style="font-weight: bold; background: white; padding: 5px 15px; border-radius: 20px;">💎 <span id="coins">0</span></span>
+            <span id="lesson-title" style="background: var(--mint); padding: 5px 15px; border-radius: 20px; color:#4caf50; font-size:12px; font-weight: bold;">...</span>
         </div>
-        <div class="card" style="margin-top:20px;">
-            <div>สวัสดีจ๊ะ <span id="display-name" style="font-weight: 600; color: var(--soft-pink);"></span></div>
-            <img id="user-mascot" src="" width="140" style="margin: 10px 0;">
+        <div class="card" style="margin-top:25px;">
+            <div id="ai-status" class="status-badge">กดที่ปุ่ม "พูด" เพื่อเริ่มจ๊ะ</div>
+            <img id="user-mascot" src="" width="140" style="margin: 15px 0;">
+            <div id="lesson-content" style="font-size: 32px; color: #444; font-weight:bold; letter-spacing: 2px;">...</div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--sky-blue); box-shadow: 0 4px 0 #89a8b5;">📖 อ่าน</button>
-            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--mint); box-shadow: 0 4px 0 #8ecbb8;">🎧 ฟัง</button>
-            <button class="btn-primary" onclick="getPoints(10)" style="background:#ffd93d; box-shadow: 0 4px 0 #e6c337;">🗣️ พูด</button>
-            <button class="btn-primary" onclick="getPoints(20)" style="background:var(--soft-pink); box-shadow: 0 4px 0 #e8a0af;">✍️ เขียน</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--sky-blue); box-shadow: 0 5px 0 #81d4fa;">📖 อ่านแล้ว</button>
+            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--mint); box-shadow: 0 5px 0 #a5d6a7;">🎧 ฟังแล้ว</button>
+            <button id="speak-btn" class="btn-primary" onclick="startAI()" style="background:#fff176; color:#5d4037; box-shadow: 0 5px 0 #fdd835;">🗣️ พูดตาม</button>
+            <button class="btn-primary" onclick="goStroke()" style="background:var(--soft-pink); box-shadow: 0 5px 0 #efabb7;">✍️ เขียนตาม</button>
         </div>
     </div>
 
     <div id="page-admin" class="page">
-        <h3 style="color: var(--soft-pink);">📊 ตารางคะแนน Real-time</h3>
-        <div class="card" style="padding: 10px;">
-            <table>
-                <thead><tr style="color: #888;"><th>อวตาร</th><th>ชื่อ</th><th>💎</th></tr></thead>
+        <h3 style="color: var(--soft-pink); text-align: center;">⚙️ ห้องทำงานคุณครู</h3>
+        <div class="card" style="text-align: left;">
+            <label style="font-size: 12px; color: #888; margin-left: 10px;">หัวข้อวันนี้:</label>
+            <input type="text" id="edit-title">
+            <label style="font-size: 12px; color: #888; margin-left: 10px;">คำศัพท์ (ภาษาจีน):</label>
+            <input type="text" id="edit-words">
+            <label style="font-size: 12px; color: #888; margin-left: 10px;">ลิงก์ลำดับขีด:</label>
+            <input type="text" id="edit-stroke" placeholder="วางลิงก์สอนเขียนที่นี่">
+            <button class="btn-primary" onclick="updateLesson()" style="background: var(--mint); box-shadow: 0 5px 0 #a5d6a7;">ประกาศบทเรียนใหม่!</button>
+        </div>
+        <div class="card">
+            <p style="font-size: 16px; font-weight: bold; color: #555;">🏆 ตารางเหรียญรางวัล</p>
+            <table id="score-table">
+                <thead><tr><th>รูป</th><th>ชื่อ</th><th>💎</th></tr></thead>
                 <tbody id="score-body"></tbody>
             </table>
+            <button class="btn-primary" onclick="clearScores()" style="background: #ff8a80; font-size: 14px; margin-top:20px; box-shadow: 0 5px 0 #e57373;">ล้างกระดานคะแนน</button>
         </div>
-        <button class="btn-primary" onclick="navTo('page-home')" style="background:gray;">กลับหน้าหลัก</button>
+        <button class="btn-primary" onclick="navTo('page-home')" style="background:#bbb; box-shadow: 0 5px 0 #999;">กลับหน้าหลัก</button>
     </div>
 
     <div class="nav-bar" id="main-nav" style="display:none;">
         <div class="nav-item active" onclick="navTo('page-home', this)">🏠<br>หน้าหลัก</div>
-        <div class="nav-item" style="opacity: 0.3;">📚<br>บทเรียน</div>
+        <div class="nav-item" style="opacity:0.3">📚<br>บทเรียน</div>
         <div class="nav-item" onclick="checkAdmin(this)">⚙️<br>จัดการ</div>
     </div>
 </div>
 
 <script>
-    // --- ระบบเสียง (Sound Engine) ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(type) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        
-        if(type === 'success') {
-            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // A5
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        } else {
-            osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
-        }
-    }
-
-    // --- Firebase & Logic ---
     const firebaseConfig = {
       apiKey: "AIzaSyAupdP390vgrb_r1JzMAWbxNCfR3Gf8f-E",
       authDomain: "chineseclass-teacherguan.firebaseapp.com",
@@ -120,57 +107,90 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     let user = { name: "", coins: 0, avatar: "" };
+    let currentWord = "";
+    let currentStroke = "";
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+    recognition.onstart = () => { document.getElementById('ai-status').innerText = "🔴 ฟังอยู่จ๊ะ พูดเลย..."; };
+    recognition.onresult = (e) => {
+        const speech = e.results[0][0].transcript;
+        document.getElementById('ai-status').innerText = "หนูพูดว่า: " + speech;
+        if (speech.includes(currentWord)) {
+            alert("ว้าว! สำเนียงเป๊ะมากจ๊ะ 💎 +10 เหรียญ");
+            getPoints(10);
+        } else {
+            alert("เกือบแล้วจ๊ะ ลองออกเสียงอีกนิดนะ!");
+        }
+    };
+    recognition.onend = () => { if(!document.getElementById('ai-status').innerText.includes("หนูพูดว่า")) document.getElementById('ai-status').innerText = "ลองกดพูดอีกทีนะจ๊ะ"; };
+
+    function startAI() { if(!currentWord) return alert("คุณครูยังไม่ได้ลงบทเรียนจ๊ะ"); recognition.start(); }
+
+    db.ref('lesson').on('value', (s) => {
+        const d = s.val() || { title: "บทเรียน", words: "你好", stroke: "" };
+        document.getElementById('lesson-title').innerText = d.title;
+        document.getElementById('lesson-content').innerText = d.words;
+        currentWord = d.words; currentStroke = d.stroke;
+        document.getElementById('edit-title').value = d.title;
+        document.getElementById('edit-words').value = d.words;
+        document.getElementById('edit-stroke').value = d.stroke;
+    });
 
     function pickAvatar(img) {
-        playSound('success');
         document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
         img.classList.add('selected');
         user.avatar = img.src;
     }
 
     function doLogin() {
-        const name = document.getElementById('user-name').value;
-        if(!name || !user.avatar) { playSound('error'); return alert("เลือกชื่อและตัวละครก่อนจ๊ะ!"); }
-        user.name = name;
-        document.getElementById('display-name').innerText = name;
+        const nameInput = document.getElementById('user-name').value;
+        if(!nameInput || !user.avatar) return alert("กรุณาใส่ชื่อและเลือกตัวละครก่อนจ๊ะ");
+        user.name = nameInput;
         document.getElementById('user-mascot').src = user.avatar;
         document.getElementById('main-nav').style.display = 'grid';
         navTo('page-home');
-        sync();
+        syncData();
     }
 
     function getPoints(pts) {
         user.coins += pts;
         document.getElementById('coins').innerText = user.coins;
-        playSound('success');
-        sync();
+        syncData();
     }
 
-    function sync() {
-        if(!user.name) return;
-        db.ref('students/' + user.name).set({
-            name: user.name, coins: user.coins, avatar: user.avatar,
-            lastUpdate: new Date().toLocaleTimeString()
+    function goStroke() { getPoints(20); if(currentStroke) window.open(currentStroke, '_blank'); else alert("คุณครูยังไม่ได้ใส่ลิงก์จ๊ะ"); }
+
+    function syncData() { if(user.name) db.ref('students/' + user.name).update({ name: user.name, coins: user.coins, avatar: user.avatar }); }
+
+    function updateLesson() {
+        db.ref('lesson').set({
+            title: document.getElementById('edit-title').value,
+            words: document.getElementById('edit-words').value,
+            stroke: document.getElementById('edit-stroke').value
         });
+        alert("ส่งบทเรียนถึงเด็กๆ แล้วจ๊ะ!");
     }
+
+    function clearScores() { if(confirm("ต้องการล้างคะแนนทั้งห้องเพื่อเริ่มบทเรียนใหม่ไหมจ๊ะ?")) db.ref('students').remove(); }
 
     function checkAdmin(el) {
-        if(prompt("รหัสครู:") === "1234") {
+        if(prompt("กรุณาใส่รหัสผ่านคุณครู:") === "1234") {
             navTo('page-admin', el);
             db.ref('students').on('value', (s) => {
                 const data = s.val();
                 const tbody = document.getElementById('score-body');
                 tbody.innerHTML = "";
                 for(let id in data) {
-                    tbody.innerHTML += `<tr><td><img src="" class="admin-avatar"></td><td></td><td>💎 </td></tr>`;
+                    tbody.innerHTML += `<tr><td><img src="${data[id].avatar}" width="35" style="border-radius:50%"></td><td>${data[id].name}</td><td><b>${data[id].coins}</b></td></tr>`;
                 }
             });
         }
     }
 
-    function navTo(id, el) {
+    function navTo(pageId, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.getElementById(pageId).classList.add('active');
         if(el) {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
