@@ -21,130 +21,117 @@
 
         .app-container { 
             width: 100%; max-width: 414px; height: 100vh; background-color: var(--soft-white); 
-            position: relative; border-radius: 40px; overflow: hidden; border: 10px solid white; 
+            position: relative; border-radius: 40px; overflow: hidden; border: 8px solid white; 
             box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
         }
 
-        .page { display: none; flex-direction: column; height: 100%; padding: 25px; overflow-y: auto; padding-bottom: 120px; z-index: 1; }
+        .page { display: none; flex-direction: column; height: 100%; padding: 20px; overflow-y: auto; padding-bottom: 100px; }
         .page.active { display: flex; }
 
-        .card { background: white; border-radius: 30px; padding: 20px; box-shadow: 0 10px 25px var(--shadow); margin-bottom: 15px; position: relative; }
+        .card { background: white; border-radius: 25px; padding: 20px; box-shadow: 0 8px 20px var(--shadow); margin-bottom: 15px; }
 
-        /* Avatar Grid */
-        .av-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 15px 0; }
+        /* Avatar */
+        .av-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0; }
         .av-item { 
-            background: white; border: 4px solid #f1f5f9; border-radius: 25px; padding: 10px; 
-            cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center;
+            background: white; border: 3px solid #f1f5f9; border-radius: 20px; padding: 8px; 
+            cursor: pointer; transition: 0.3s; text-align: center;
         }
-        .av-item img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 5px; }
-        .av-item.selected { border-color: var(--orange); background: #fffcf0; transform: translateY(-8px); box-shadow: 0 10px 20px rgba(255,130,58,0.2); }
+        .av-item img { width: 60px; height: 60px; object-fit: contain; }
+        .av-item.selected { border-color: var(--orange); background: #fffcf0; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,130,58,0.2); }
 
-        /* Evolution Track */
+        /* Evolution */
         .evo-track { width: 100%; height: 10px; background: #f1f5f9; border-radius: 5px; margin-top: 10px; overflow: hidden; }
         .evo-fill { height: 100%; background: var(--orange); transition: 1s width; width: 0%; }
 
         .btn-skill { 
-            border: none; padding: 18px; border-radius: 25px; color: white; font-weight: 600; 
-            cursor: pointer; font-size: 16px; box-shadow: 0 6px 0 rgba(0,0,0,0.1); 
+            border: none; padding: 15px; border-radius: 20px; color: white; font-weight: 600; 
+            cursor: pointer; font-size: 16px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
         }
-        .btn-skill:active { transform: translateY(4px); box-shadow: none; }
+        .btn-skill:active { transform: translateY(3px); box-shadow: none; }
 
         .nav-bar { 
             background: white; display: grid; grid-template-columns: repeat(3, 1fr); 
-            padding: 15px 0 35px; position: absolute; bottom: 0; width: 100%; 
-            border-radius: 40px 40px 0 0; box-shadow: 0 -10px 30px var(--shadow); z-index: 10;
+            padding: 10px 0 30px; position: absolute; bottom: 0; width: 100%; 
+            border-radius: 30px 30px 0 0; box-shadow: 0 -5px 20px var(--shadow); z-index: 10;
         }
-        .nav-item { text-align: center; color: #cbd5e1; cursor: pointer; font-size: 12px; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
+        .nav-item { text-align: center; color: #cbd5e1; cursor: pointer; font-size: 11px; }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 4px; }
         .nav-item.active { color: var(--purple); font-weight: bold; }
 
-        label { font-size: 13px; font-weight: bold; color: var(--text-dark); display: block; margin-bottom: 5px; margin-left: 5px; }
-        input, select { width: 100%; padding: 14px; border-radius: 18px; border: 2px solid #f1f5f9; margin-bottom: 12px; outline: none; background: #fcfcfc; }
+        input, select { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid #f1f5f9; margin-bottom: 10px; outline: none; }
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,41,59,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 30px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="page-login" class="page active">
-        <h2 style="text-align: center; color: var(--orange); font-size: 30px; margin-top: 10px;">ห้องเรียน 关老师 🐼</h2>
-        <div class="card" style="margin-top: 15px;">
+        <h2 style="text-align: center; color: var(--orange); margin-bottom: 15px;">ห้องเรียน 关老师 🐼</h2>
+        <div class="card">
             <input type="text" id="u-name" placeholder="ชื่อเล่นของหนู...">
-            <select id="u-class-select"><option value="">กำลังโหลดห้องเรียน...</option></select>
-            <p style="font-size: 12px; color: #94a3b8; font-weight: 600; text-align:center;">✨ เลือกคู่หูของหนู ✨</p>
+            <select id="u-class-select"><option value="ห้องทั่วไป">กำลังโหลดห้อง...</option></select>
+            <p style="font-size: 12px; color: #94a3b8; text-align:center; margin: 10px 0;">✨ เลือกคู่หูของหนู ✨</p>
             <div class="av-grid">
-                <div class="av-item" onclick="selAv(this, 'panda')"><img src="https://cdn-icons-png.flaticon.com/512/235/235384.png"><span>แพนด้า</span></div>
-                <div class="av-item" onclick="selAv(this, 'rabbit')"><img src="https://cdn-icons-png.flaticon.com/512/2613/2613149.png"><span>กระต่าย</span></div>
-                <div class="av-item" onclick="selAv(this, 'chick')"><img src="https://cdn-icons-png.flaticon.com/512/2632/2632839.png"><span>กุ๊กไก่</span></div>
-                <div class="av-item" onclick="selAv(this, 'monkey')"><img src="https://cdn-icons-png.flaticon.com/512/2991/2991157.png"><span>เจ้าลิง</span></div>
-                <div class="av-item" onclick="selAv(this, 'koala')"><img src="https://cdn-icons-png.flaticon.com/512/3069/3069225.png"><span>โคล่า</span></div>
-                <div class="av-item" onclick="selAv(this, 'apple')"><img src="https://cdn-icons-png.flaticon.com/512/415/415682.png"><span>แอปเปิ้ล</span></div>
-                <div class="av-item" onclick="selAv(this, 'tangerine')"><img src="https://cdn-icons-png.flaticon.com/512/1728/1728739.png"><span>ส้ม</span></div>
-                <div class="av-item" onclick="selAv(this, 'banana')"><img src="https://cdn-icons-png.flaticon.com/512/2909/2909761.png"><span>กล้วย</span></div>
-                <div class="av-item" onclick="selAv(this, 'grape')"><img src="https://cdn-icons-png.flaticon.com/512/1155/1155280.png"><span>องุ่น</span></div>
-                <div class="av-item" onclick="selAv(this, 'strawberry')"><img src="https://cdn-icons-png.flaticon.com/512/590/590685.png"><span>เบอร์รี่</span></div>
+                <div class="av-item" onclick="selAv(this, 'panda', 'https://cdn-icons-png.flaticon.com/512/235/235384.png')"><img src="https://cdn-icons-png.flaticon.com/512/235/235384.png"><span>แพนด้า</span></div>
+                <div class="av-item" onclick="selAv(this, 'rabbit', 'https://cdn-icons-png.flaticon.com/512/2613/2613149.png')"><img src="https://cdn-icons-png.flaticon.com/512/2613/2613149.png"><span>กระต่าย</span></div>
+                <div class="av-item" onclick="selAv(this, 'chick', 'https://cdn-icons-png.flaticon.com/512/2632/2632839.png')"><img src="https://cdn-icons-png.flaticon.com/512/2632/2632839.png"><span>กุ๊กไก่</span></div>
+                <div class="av-item" onclick="selAv(this, 'monkey', 'https://cdn-icons-png.flaticon.com/512/2991/2991157.png')"><img src="https://cdn-icons-png.flaticon.com/512/2991/2991157.png"><span>เจ้าลิง</span></div>
+                <div class="av-item" onclick="selAv(this, 'koala', 'https://cdn-icons-png.flaticon.com/512/3069/3069225.png')"><img src="https://cdn-icons-png.flaticon.com/512/3069/3069225.png"><span>โคล่า</span></div>
+                <div class="av-item" onclick="selAv(this, 'apple', 'https://cdn-icons-png.flaticon.com/512/415/415682.png')"><img src="https://cdn-icons-png.flaticon.com/512/415/415682.png"><span>แอปเปิ้ล</span></div>
             </div>
             <button class="btn-skill" style="background: var(--purple);" onclick="login()">เข้าห้องเรียน ➔</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
-        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:15px;">
-            <span style="background: white; padding: 5px 15px; border-radius: 15px; font-weight: 700;">💎 <span id="score">0</span></span>
-            <span id="room-tag" style="background: var(--lime); padding: 5px 15px; border-radius: 15px; font-size: 11px; font-weight: 700;">...</span>
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:10px;">
+            <span style="background: white; padding: 5px 12px; border-radius: 12px; font-weight: 700;">💎 <span id="score">0</span></span>
+            <span id="room-tag" style="background: var(--lime); padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 700;">...</span>
         </div>
-        
         <div class="card" style="text-align: center;">
-            <img id="pet-img" src="" style="height:110px; transition: 0.5s transform;">
-            <h3 id="pet-status" style="font-size: 16px; margin-top: 10px; color: var(--orange);">ร่างไข่</h3>
+            <img id="pet-img" src="" style="height:90px; transition: 0.3s;">
+            <h3 id="pet-status" style="font-size: 14px; color: var(--orange); margin-top:5px;">กำลังโหลด...</h3>
             <div class="evo-track"><div id="pet-fill" class="evo-fill"></div></div>
-            <hr style="border:0; border-top:2px solid #f8fafc; margin:20px 0;">
-            <p id="main-cat" style="font-size: 12px; font-weight: bold; color: var(--purple); text-transform: uppercase;">หมวดหมู่</p>
-            <h1 id="main-word" style="font-size: 55px; color: var(--text-dark);">...</h1>
+            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+            <p id="main-cat" style="font-size: 11px; font-weight: bold; color: var(--purple);">หมวดหมู่</p>
+            <h1 id="main-word" style="font-size: 45px; color: var(--text-dark);">...</h1>
         </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="btn-skill" onclick="goLink('read')" style="background:#B3E5FC;"><i class="fa-solid fa-book"></i> อ่าน</button>
-            <button class="btn-skill" onclick="goLink('listen')" style="background:#C8E6C9;"><i class="fa-solid fa-headphones"></i> ฟัง</button>
-            <button class="btn-skill" onclick="goLink('speak')" style="background:#FFF176; color:#5d4037;"><i class="fa-solid fa-comment"></i> พูด</button>
-            <button class="btn-skill" onclick="goLink('write')" style="background:var(--peach);"><i class="fa-solid fa-pen-nib"></i> เขียน</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn-skill" onclick="goLink('read')" style="background:#B3E5FC;">📖 อ่าน</button>
+            <button class="btn-skill" onclick="goLink('listen')" style="background:#C8E6C9;">🎧 ฟัง</button>
+            <button class="btn-skill" onclick="goLink('speak')" style="background:#FFF176; color:#5d4037;">🗣️ พูด</button>
+            <button class="btn-skill" onclick="goLink('write')" style="background:var(--peach);">✍️ เขียน</button>
         </div>
     </div>
 
     <div id="page-vocab" class="page">
-        <h2 style="text-align: center; color: var(--purple); margin-bottom: 15px;">คลังคำศัพท์</h2>
+        <h2 style="text-align: center; color: var(--purple); margin-bottom: 10px;">คลังคำศัพท์</h2>
         <div id="vocab-list"></div>
     </div>
 
     <div id="page-board" class="page">
-        <h2 style="text-align: center; color: var(--orange); margin-bottom: 15px;">ดาวเด่นห้อง <span id="board-title"></span></h2>
+        <h2 style="text-align: center; color: var(--orange); margin-bottom: 10px;">ดาวเด่นของห้อง</h2>
         <div id="leaderboard"></div>
     </div>
 
     <div id="page-admin" class="page">
-        <h2 style="color: var(--purple); margin-bottom: 15px;">⚙️ Admin Settings</h2>
-        <div class="card" style="text-align:left;">
-            <label>🏫 รายชื่อห้องเรียน (แยกด้วย , )</label>
-            <input type="text" id="adm-rooms" placeholder="ม.1, ม.2">
-            <hr style="border:0; border-top:1px dashed #eee; margin:10px 0;">
-            <label>🔑 รหัสลับผ่านด่าน</label>
-            <input type="text" id="adm-code" placeholder="เช่น 888">
-            <label>📁 หมวดหมู่บทเรียน</label>
-            <input type="text" id="adm-cat" placeholder="เช่น ครอบครัว">
-            <label>🏮 ตัวจีนหลัก</label>
-            <input type="text" id="adm-word" placeholder="เช่น 老师">
-            <hr style="border:0; border-top:1px dashed #eee; margin:10px 0;">
-            <label>🔗 ลิงก์ทักษะ (Wordwall)</label>
-            <input type="text" id="l-r" placeholder="Read Link">
-            <input type="text" id="l-l" placeholder="Listen Link">
-            <input type="text" id="l-s" placeholder="Speak Link">
-            <input type="text" id="l-w" placeholder="Write Link">
-            <button class="btn-skill" style="background:var(--purple); margin-top:10px;" onclick="saveAdmin()">บันทึกข้อมูล ➔</button>
+        <h3>⚙️ Admin Settings</h3>
+        <div class="card" style="font-size:12px;">
+            ห้องเรียน (แยกด้วย ,): <input type="text" id="adm-rooms">
+            รหัสลับ: <input type="text" id="adm-code">
+            หมวดหมู่: <input type="text" id="adm-cat">
+            ตัวจีน: <input type="text" id="adm-word">
+            <hr>
+            ลิงก์ Read: <input type="text" id="l-r">
+            ลิงก์ Listen: <input type="text" id="l-l">
+            ลิงก์ Speak: <input type="text" id="l-s">
+            ลิงก์ Write: <input type="text" id="l-w">
+            <button class="btn-skill" style="background:var(--purple);" onclick="saveAdmin()">บันทึกข้อมูล ➔</button>
         </div>
-        <button class="btn-skill" style="background:#94a3b8;" onclick="nav('page-home')">กลับหน้าหลัก</button>
+        <button class="btn-skill" style="background:#94a3b8;" onclick="nav('page-home')">กลับ</button>
     </div>
 
     <div id="nav-bar" class="nav-bar" style="display:none;">
@@ -154,20 +141,19 @@
     </div>
 
     <div id="web-overlay" class="overlay">
-        <div style="padding:15px; background:white; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee;">
-            <b style="color:var(--purple);">ตั้งใจทำนะจ๊ะ...</b>
-            <button onclick="finishSkill()" style="border:none; background:var(--orange); color:white; padding:8px 20px; border-radius:15px; font-weight:bold;">ส่งงาน X</button>
+        <div style="padding:10px; display:flex; justify-content:space-between; align-items:center;">
+            <b>ทำภารกิจให้สำเร็จนะ!</b>
+            <button onclick="finishSkill()" style="background:var(--orange); color:white; border:none; padding:5px 15px; border-radius:10px;">X ส่งงาน</button>
         </div>
-        <iframe id="web-frame" style="width:100%; height:100%; border:none;"></iframe>
+        <iframe id="web-frame" style="flex:1; border:none;"></iframe>
     </div>
 
     <div id="modal-code" class="modal">
-        <div class="card" style="width:100%; max-width:300px; text-align:center;">
-            <h2 style="color: var(--purple);">🔓 ใส่รหัสลับ</h2>
-            <p style="font-size: 11px; color: #94a3b8; margin-bottom: 15px;">พิมพ์รหัสที่ได้จากแบบฝึกหัดนะจ๊ะ</p>
-            <input type="text" id="input-code" placeholder="รหัสคืออะไร..." style="text-align:center; font-size:22px; font-weight:bold; color:var(--orange);">
+        <div class="card" style="width:280px; text-align:center;">
+            <h3>🔓 ใส่รหัสลับ</h3>
+            <input type="text" id="input-code" placeholder="รหัสคืออะไร..." style="text-align:center; font-size:20px;">
             <button class="btn-skill" style="background: var(--purple);" onclick="verifyCode()">รับเพชร 💎</button>
-            <button style="border:none; background:none; color:#94a3b8; margin-top:10px;" onclick="closeModal()">ยังไม่ทำจ๊ะ</button>
+            <button onclick="closeModal()" style="border:none; background:none; margin-top:10px; color:#94a3b8;">ปิด</button>
         </div>
     </div>
 </div>
@@ -188,15 +174,15 @@
     let user = { name: "", class: "", coins: 0, pet: "", petImg: "" };
     let curData = {};
 
-    function selAv(el, type) {
+    function selAv(el, type, img) {
         document.querySelectorAll('.av-item').forEach(i => i.classList.remove('selected'));
-        el.classList.add('selected'); 
-        user.pet = type;
-        user.petImg = el.querySelector('img').src;
+        el.classList.add('selected');
+        user.pet = type; user.petImg = img;
     }
 
+    // โหลดห้องเรียน
     db.ref('settings/rooms').on('value', (s) => {
-        const rooms = s.val() ? s.val().split(',') : ['ม.1'];
+        const rooms = s.val() ? s.val().split(',') : ['ห้องเรียน 1'];
         const select = document.getElementById('u-class-select');
         select.innerHTML = "";
         rooms.forEach(r => { select.innerHTML += `<option value="${r.trim()}">${r.trim()}</option>`; });
@@ -204,16 +190,27 @@
     });
 
     function login() {
-        user.name = document.getElementById('u-name').value;
-        user.class = document.getElementById('u-class-select').value;
-        if(!user.name || !user.pet) return alert("เลือกชื่อและสัตว์เลี้ยงก่อนนะจ๊ะ");
+        const name = document.getElementById('u-name').value.trim();
+        const room = document.getElementById('u-class-select').value;
+        
+        if(!name) return alert("หนูจ๋า พิมพ์ชื่อเล่นก่อนนะ");
+        if(!user.pet) return alert("จิ้มเลือกคู่หูตัวที่ชอบก่อนนะจ๊ะ");
+
+        user.name = name;
+        user.class = room;
+
+        // เข้าหน้าหลักทันที
+        document.getElementById('room-tag').innerText = user.class;
+        document.getElementById('nav-bar').style.display = 'grid';
+        nav('page-home');
+
+        // ดึงข้อมูลจริงจาก Firebase
         db.ref(`students/${user.class}/${user.name}`).once('value', (s) => {
-            if(s.exists()) user = s.val();
-            document.getElementById('score').innerText = user.coins;
-            document.getElementById('room-tag').innerText = user.class;
-            document.getElementById('board-title').innerText = user.class;
-            document.getElementById('nav-bar').style.display = 'grid';
-            nav('page-home'); updatePet(); listenBoard(); sync();
+            if(s.exists()) {
+                user = s.val();
+                document.getElementById('score').innerText = user.coins;
+            }
+            updatePet(); sync(); listenBoard();
         });
     }
 
@@ -221,19 +218,14 @@
         const img = document.getElementById('pet-img'), status = document.getElementById('pet-status'), fill = document.getElementById('pet-fill');
         let p = (user.coins / 200) * 100;
         if(user.coins < 50) { 
-            img.src="https://cdn-icons-png.flaticon.com/512/3067/3067160.png"; // ไอคอนไข่
-            status.innerText="ร่างไข่แสนรู้"; 
+            img.src="https://cdn-icons-png.flaticon.com/512/3067/3067160.png"; status.innerText="ร่างไข่แสนรู้"; 
         } else if(user.coins < 150) { 
-            img.src = user.petImg; 
-            img.style.transform="scale(0.8)"; 
-            status.innerText="ร่างตัวน้อยแสนซน"; 
+            img.src = user.petImg; img.style.transform="scale(0.8)"; status.innerText="ร่างตัวน้อยแสนซน"; 
         } else { 
-            img.src = user.petImg; 
-            img.style.transform="scale(1.2)"; 
-            status.innerText="ร่างสมบูรณ์สุดเท่!"; 
-            p=100; 
+            img.src = user.petImg; img.style.transform="scale(1.2)"; status.innerText="ร่างสมบูรณ์สุดเท่!"; p=100; 
         }
         fill.style.width = p + "%";
+        document.getElementById('score').innerText = user.coins;
     }
 
     function sync() { if(user.name) db.ref(`students/${user.class}/${user.name}`).set(user); }
@@ -241,7 +233,7 @@
     function goLink(type) {
         const link = curData[type + 'Link'];
         if(link) { document.getElementById('web-overlay').style.display = 'flex'; document.getElementById('web-frame').src = link; }
-        else alert("รอคุณครูลงลิงก์นะจ๊ะ");
+        else alert("รอคุณครูอัปเดตลิงก์นะจ๊ะ");
     }
 
     function finishSkill() {
@@ -251,21 +243,27 @@
     }
 
     function verifyCode() {
-        if(document.getElementById('input-code').value === curData.secretCode) {
-            user.coins += 20; document.getElementById('score').innerText = user.coins;
-            alert("เก่งมาก! รับ 20 💎"); sync(); updatePet(); closeModal();
-        } else alert("รหัสผิดจ๊ะ ลองใหม่นะ!");
+        const code = document.getElementById('input-code').value;
+        if(code === curData.secretCode) {
+            user.coins += 20; alert("เก่งมาก! รับไปเลย 20 💎");
+            sync(); updatePet(); closeModal();
+        } else alert("รหัสไม่ถูกต้อง ลองใหม่นะจ๊ะ");
     }
 
     function closeModal() { document.getElementById('modal-code').style.display = 'none'; document.getElementById('input-code').value = ""; }
 
     db.ref('master').on('value', (s) => {
         curData = s.val() || {};
-        document.getElementById('main-word').innerText = curData.word || "สวัสดี";
+        document.getElementById('main-word').innerText = curData.word || "你好";
         document.getElementById('main-cat').innerText = curData.cat || "บทเรียนใหม่";
-        document.getElementById('adm-code').value = curData.secretCode || "";
-        document.getElementById('adm-cat').value = curData.cat || "";
+        // ใส่ข้อมูลลงหน้า Admin ด้วย
         document.getElementById('adm-word').value = curData.word || "";
+        document.getElementById('adm-cat').value = curData.cat || "";
+        document.getElementById('adm-code').value = curData.secretCode || "";
+        document.getElementById('l-r').value = curData.readLink || "";
+        document.getElementById('l-l').value = curData.listenLink || "";
+        document.getElementById('l-s').value = curData.speakLink || "";
+        document.getElementById('l-w').value = curData.writeLink || "";
     });
 
     db.ref('vocab_bank').on('value', (s) => {
@@ -273,21 +271,21 @@
         const data = s.val(); if(!data) return;
         const cats = {}; Object.values(data).forEach(v => { if(!cats[v.cat]) cats[v.cat] = []; cats[v.cat].push(v.word); });
         for(let c in cats) {
-            let sec = `<div style="margin-top:15px;"><span style="background:var(--purple); color:white; padding:4px 12px; border-radius:15px; font-size:11px;">📂 ${c}</span><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">`;
-            cats[c].forEach(w => sec += `<div class="card" style="margin:0; padding:12px; font-size:22px; font-weight:bold; text-align:center;">${w}</div>`);
+            let sec = `<div style="margin-top:10px;"><span style="background:var(--purple); color:white; padding:3px 10px; border-radius:10px; font-size:10px;">${c}</span><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:5px;">`;
+            cats[c].forEach(w => sec += `<div class="card" style="margin:0; padding:10px; font-size:18px; font-weight:bold; text-align:center;">${w}</div>`);
             list.innerHTML += sec + `</div></div>`;
         }
     });
 
     function listenBoard() {
-        db.ref(`students/${user.class}`).orderByChild('coins').on('value', (s) => {
+        db.ref(`students/${user.class}`).orderByChild('coins').limitToLast(10).on('value', (s) => {
             const list = document.getElementById('leaderboard'); list.innerHTML = "";
             let arr = []; s.forEach(c => arr.push(c.val()));
             arr.reverse().forEach((st, i) => {
-                list.innerHTML += `<div class="card" style="display:flex; align-items:center; padding:10px 15px; margin-bottom:10px;">
-                    <b style="width:25px;">${i+1}</b>
-                    <img src="${st.petImg}" width="35" style="margin-right:10px;">
-                    <div style="flex:1; font-weight:600;">${st.name}</div><b>${st.coins} 💎</b>
+                list.innerHTML += `<div class="card" style="display:flex; align-items:center; padding:10px 15px; margin-bottom:8px;">
+                    <b style="width:20px;">${i+1}</b>
+                    <img src="${st.petImg}" width="30" style="margin-right:10px;">
+                    <div style="flex:1;">${st.name}</div><b>${st.coins} 💎</b>
                 </div>`;
             });
         });
@@ -296,13 +294,13 @@
     function saveAdmin() {
         const w = document.getElementById('adm-word').value, c = document.getElementById('adm-cat').value;
         db.ref('settings/rooms').set(document.getElementById('adm-rooms').value);
-        db.ref('master').update({
+        db.ref('master').set({
             word: w, cat: c, secretCode: document.getElementById('adm-code').value,
             readLink: document.getElementById('l-r').value, listenLink: document.getElementById('l-l').value,
             speakLink: document.getElementById('l-s').value, writeLink: document.getElementById('l-w').value
         });
         if(w && c) db.ref('vocab_bank').push({ word: w, cat: c });
-        alert("บันทึกข้อมูลเรียบร้อยแล้วจ้า!");
+        alert("บันทึกข้อมูลเรียบร้อย!");
     }
 
     function nav(id, el) {
@@ -311,10 +309,11 @@
         if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
     }
 
+    // รหัสลับเข้าหน้า Admin
     let adminC = 0;
     document.body.addEventListener('click', (e) => {
         if(e.clientX > window.innerWidth-60 && e.clientY > window.innerHeight-60) {
-            adminC++; if(adminC === 3) { adminC=0; if(prompt("คุณครูคะ ใส่รหัสเข้าหน้าตั้งค่าค่ะ")==="1234") nav('page-admin'); }
+            adminC++; if(adminC === 3) { adminC=0; if(prompt("Pass?")==="1234") nav('page-admin'); }
         } else adminC = 0;
     });
 </script>
