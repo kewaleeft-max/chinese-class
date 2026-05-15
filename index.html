@@ -3,98 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chinese Class - stroke master</title>
+    <title>Chinese Class Ultimate - Master</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     <style>
-        :root { --bg-cream: #FFFDE7; --soft-pink: #FFC1CC; --sky-blue: #B3E5FC; --mint: #C8E6C9; --white: #ffffff; }
-        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; touch-action: manipulation; }
-        body { margin: 0; background-color: #fcfcfc; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .app-container { width: 100%; max-width: 400px; height: 100vh; max-height: 850px; background-color: var(--bg-cream); position: relative; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 35px; overflow: hidden; border: 8px solid white; }
-        .page { display: none; flex-direction: column; height: 100%; padding: 25px; overflow-y: auto; padding-bottom: 120px; }
-        .page.active { display: flex; }
-        .card { background: var(--white); border-radius: 30px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 15px; text-align: center; }
-        .btn-primary { background: var(--soft-pink); color: white; border: none; padding: 16px; border-radius: 20px; cursor: pointer; width: 100%; font-weight: 600; box-shadow: 0 5px 0 #efabb7; font-size: 18px; margin-top: 10px; }
-        .btn-primary:active { transform: translateY(4px); box-shadow: none; }
-        input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #f0f0f0; margin-bottom: 15px; text-align: center; }
-        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 15px 0 35px; position: absolute; bottom: 0; width: 100%; border-radius: 35px 35px 0 0; z-index: 10; }
-        .nav-item { text-align: center; color: #ddd; cursor: pointer; font-size: 12px; }
-        .nav-item.active { color: var(--soft-pink); font-weight: bold; }
+        :root { --soft-pink: #FFC1CC; --sky-blue: #B3E5FC; --mint: #C8E6C9; --text: #5d4037; --bg: #FFFDE7; }
+        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* กระดานเขียน */
-        #draw-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; flex-direction: column; align-items: center; padding: 20px; }
-        #canvas-board { background: #fafafa; border: 4px dashed var(--soft-pink); border-radius: 20px; touch-action: none; margin-top: 10px; }
-        .avatar-item { width: 100%; aspect-ratio: 1/1; border-radius: 20px; border: 4px solid transparent; cursor: pointer; }
-        .avatar-item.selected { border-color: var(--soft-pink); transform: scale(1.1); }
+        /* Container */
+        .app-container { width: 100%; max-width: 414px; height: 100vh; background: var(--bg); position: relative; border-radius: 30px; overflow: hidden; border: 8px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .page { display: none; flex-direction: column; height: 100%; padding: 18px; overflow-y: auto; padding-bottom: 110px; }
+        .page.active { display: flex; }
+        
+        /* UI Components */
+        .card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 12px; position: relative; }
+        .news-bar { background: #fff9c4; border-left: 5px solid #fbc02d; padding: 10px; border-radius: 12px; font-size: 13px; margin-bottom: 12px; animation: breathe 3s infinite; }
+        @keyframes breathe { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+
+        /* Pet & Evolution */
+        .pet-stage { text-align: center; padding: 10px; background: linear-gradient(180deg, #fff, #fff9fa); border-radius: 20px; }
+        .pet-img { height: 90px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .evo-progress { width: 120px; height: 6px; background: #eee; border-radius: 10px; margin: 8px auto; overflow: hidden; }
+        .evo-fill { height: 100%; background: var(--soft-pink); width: 0%; transition: 1s; }
+
+        /* Vocab Grid (ที่ครูเน้น) */
+        .vocab-section { margin-top: 15px; }
+        .cat-title { background: var(--soft-pink); color: white; padding: 4px 15px; border-radius: 20px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+        .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .vocab-card { background: white; border: 2px solid #f0f0f0; border-radius: 15px; padding: 15px; text-align: center; transition: 0.2s; }
+        .vocab-card b { font-size: 26px; color: var(--text); display: block; margin-bottom: 5px; }
+        .vocab-card:active { transform: scale(0.95); background: #fffcfc; }
+
+        /* Buttons */
+        .btn-skill { border: none; padding: 16px; border-radius: 18px; color: white; font-weight: 600; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.1); font-size: 15px; }
+        .btn-skill small { display: block; font-size: 10px; font-weight: 300; opacity: 0.9; }
+        .btn-skill:active { transform: translateY(3px); box-shadow: none; }
+
+        /* Navigation */
+        .nav-bar { background: white; display: grid; grid-template-columns: repeat(3, 1fr); padding: 12px 0 32px; position: absolute; bottom: 0; width: 100%; border-top: 1px solid #f0f0f0; }
+        .nav-item { text-align: center; color: #ccc; cursor: pointer; font-size: 11px; }
+        .nav-item.active { color: var(--soft-pink); font-weight: bold; }
+
+        /* Overlay */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="page-login" class="page active">
-        <h2 style="text-align: center; color: var(--soft-pink);">ห้องเรียน关老师</h2>
+        <h2 style="text-align: center; color: var(--soft-pink); margin-top: 30px;">ยินดีต้อนรับจ๊ะ 🐼</h2>
         <div class="card">
-            <input type="text" id="user-name" placeholder="ชื่อเล่นของหนู...">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;">
-                <img src="https://img.icons8.com/clouds/200/panda.png" class="avatar-item" onclick="pickAvatar(this)">
-                <img src="https://img.icons8.com/clouds/200/rabbit.png" class="avatar-item" onclick="pickAvatar(this)">
-                <img src="https://img.icons8.com/clouds/200/chick.png" class="avatar-item" onclick="pickAvatar(this)">
+            <input type="text" id="u-name" placeholder="ชื่อเล่นของหนู..." style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-bottom:10px;">
+            <select id="u-class" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd;">
+                <option value="A">ห้อง A (ต้วมเตี้ยม)</option>
+                <option value="B">ห้อง B (ซุกซน)</option>
+            </select>
+            <p style="font-size:12px; color:#999; margin:15px 0 10px;">เลือกคู่หูเพื่อเติบโตไปด้วยกัน:</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                <img src="https://img.icons8.com/clouds/200/panda.png" class="p-sel" onclick="setPet(this, 'panda')" style="width:100%; border:3px solid transparent; border-radius:20px; cursor:pointer;">
+                <img src="https://img.icons8.com/clouds/200/rabbit.png" class="p-sel" onclick="setPet(this, 'rabbit')" style="width:100%; border:3px solid transparent; border-radius:20px; cursor:pointer;">
+                <img src="https://img.icons8.com/clouds/200/chick.png" class="p-sel" onclick="setPet(this, 'chick')" style="width:100%; border:3px solid transparent; border-radius:20px; cursor:pointer;">
             </div>
-            <button class="btn-primary" onclick="doLogin()">เข้าเรียนจ๊ะ ➔</button>
+            <button class="btn-skill" style="background:var(--soft-pink); width:100%; margin-top:20px;" onclick="login()">เริ่มเรียนเลย ➔</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
-        <div style="display:flex; justify-content: space-between;">
-            <span style="font-weight: bold;">💎 <span id="coins">0</span></span>
-            <span id="lesson-title" style="background: var(--mint); padding: 5px 12px; border-radius: 20px; color:#4caf50; font-size:12px;">...</span>
+        <div id="news-area" class="news-bar" style="display:none;">📢 <span id="news-txt"></span></div>
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:10px;">
+            <span>💎 <b><span id="score">0</span></b></span>
+            <span id="room-tag" style="background:var(--sky-blue); padding:2px 12px; border-radius:12px; font-size:11px; font-weight:bold;">...</span>
         </div>
-        <div class="card" style="margin-top:20px;">
-            <img id="user-mascot" src="" width="100" style="margin: 10px 0;">
-            <div id="lesson-content" style="font-size: 36px; font-weight:bold; color: #444;">...</div>
+        <div class="card pet-stage">
+            <img id="pet-img" src="" class="pet-img">
+            <div id="pet-rank" style="font-size:12px; font-weight:bold; color:var(--soft-pink); margin-top:5px;">ร่างไข่</div>
+            <div class="evo-progress"><div id="evo-fill" class="evo-fill"></div></div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--sky-blue); box-shadow: 0 5px 0 #81d4fa;">📖 อ่าน</button>
-            <button class="btn-primary" onclick="getPoints(10)" style="background:var(--mint); box-shadow: 0 5px 0 #a5d6a7;">🎧 ฟัง</button>
-            <button class="btn-primary" onclick="startAI()" style="background:#fff176; color:#5d4037; box-shadow: 0 5px 0 #fdd835;">🗣️ พูด</button>
-            <button class="btn-primary" onclick="openDrawing()" style="background:var(--soft-pink); box-shadow: 0 5px 0 #efabb7;">✍️ เขียนตาม</button>
+        <div class="card" style="text-align:center;">
+            <div id="cur-cat" style="font-size:12px; color:var(--soft-pink); font-weight:bold;">หมวดหมู่</div>
+            <div id="cur-word" style="font-size:42px; font-weight:bold; color:var(--text);">...</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="btn-skill" onclick="openSkill('read')" style="background:var(--sky-blue);">📖 อ่าน <small>Reading</small></button>
+            <button class="btn-skill" onclick="openSkill('listen')" style="background:var(--mint);">🎧 ฟัง <small>Listening</small></button>
+            <button class="btn-skill" onclick="openSkill('speak')" style="background:#fff176; color:#5d4037;">🗣️ พูด <small>Speaking</small></button>
+            <button class="btn-skill" onclick="openSkill('write')" style="background:var(--soft-pink);">✍️ เขียน <small>Writing</small></button>
         </div>
     </div>
 
-    <div id="draw-modal">
-        <div style="text-align: center;">
-            <h3 style="color: var(--soft-pink); margin: 0;">เขียนตามลำดับขีดนะจ๊ะ</h3>
-            <p style="font-size: 12px; color: #999;">ดูรูปข้างล่างแล้วลากเส้นตามเลย</p>
-            <img id="stroke-guide" src="" style="height: 120px; border-radius: 10px; border: 2px solid #eee; background: white;">
-        </div>
-        <canvas id="canvas-board"></canvas>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px;">
-            <button class="btn-primary" onclick="clearCanvas()" style="background:#bbb; box-shadow: 0 5px 0 #999;">ลบเขียนใหม่</button>
-            <button class="btn-primary" onclick="closeDrawing()">ส่งงานจ๊ะ ✨</button>
-        </div>
+    <div id="page-vocab" class="page">
+        <h3 style="text-align: center; color:var(--soft-pink);">📚 คลังคำศัพท์</h3>
+        <div id="vocab-list"></div>
+    </div>
+
+    <div id="page-board" class="page">
+        <h3 style="text-align: center; color:var(--soft-pink);">🏆 อันดับห้อง <span id="room-name"></span></h3>
+        <div id="leader-items"></div>
     </div>
 
     <div id="page-admin" class="page">
-        <h3>ตั้งค่าบทเรียน</h3>
-        <div class="card">
-            <input type="text" id="edit-title" placeholder="ชื่อบท">
-            <input type="text" id="edit-words" placeholder="คำศัพท์จีน">
-            <input type="text" id="edit-stroke" placeholder="ลิงก์รูปภาพลำดับขีด (GIF จะดีมาก)">
-            <button class="btn-primary" onclick="updateLesson()">บันทึก</button>
+        <h3>⚙️ จัดการระบบ (ครู)</h3>
+        <div class="card" style="text-align:left; font-size:13px;">
+            <b>1. อัปเดตคำศัพท์ & ประกาศ</b>
+            <input type="text" id="adm-cat" placeholder="หมวดหมู่ (เช่น ผลไม้)" style="width:100%; margin:5px 0;">
+            <input type="text" id="adm-word" placeholder="ตัวจีน (เช่น 苹果)" style="width:100%; margin:5px 0;">
+            <input type="text" id="adm-news" placeholder="ข้อความประกาศ" style="width:100%; margin:5px 0;">
+            <hr>
+            <b>2. ลิงก์แบบฝึกหัด (ใส่หรือไม่ใส่ก็ได้)</b>
+            <input type="text" id="adm-r" placeholder="ลิงก์ฝึกอ่าน" style="width:100%; margin:5px 0;">
+            <input type="text" id="adm-l" placeholder="ลิงก์ฝึกฟัง" style="width:100%; margin:5px 0;">
+            <input type="text" id="adm-s" placeholder="ลิงก์ฝึกพูด" style="width:100%; margin:5px 0;">
+            <input type="text" id="adm-w" placeholder="ลิงก์ฝึกเขียน" style="width:100%; margin:5px 0;">
+            <button class="btn-skill" style="background:var(--mint); width:100%; margin-top:10px;" onclick="saveMaster()">บันทึกข้อมูลทั้งหมด ➔</button>
         </div>
-        <button class="btn-primary" onclick="navTo('page-home')" style="background:gray;">กลับ</button>
+        <button class="btn-skill" style="background:#999; width:100%;" onclick="nav('page-home')">กลับ</button>
     </div>
 
-    <div class="nav-bar" id="main-nav" style="display:none;">
-        <div class="nav-item active" onclick="navTo('page-home', this)">🏠<br>หน้าหลัก</div>
-        <div class="nav-item" style="opacity:0.3">📚<br>บทเรียน</div>
-        <div class="nav-item" onclick="checkAdmin(this)">⚙️<br>จัดการ</div>
+    <div id="main-nav" class="nav-bar" style="display:none;">
+        <div class="nav-item active" onclick="nav('page-home', this)">🏠 เรียนรู้</div>
+        <div class="nav-item" onclick="nav('page-vocab', this)">📚 คำศัพท์</div>
+        <div class="nav-item" onclick="nav('page-board', this)">🏆 อันดับ</div>
+    </div>
+
+    <div id="web-view" class="overlay">
+        <div style="padding:10px; background:#f9f9f9; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd;">
+            <b id="web-title" style="color:var(--soft-pink);">แบบฝึกหัด</b>
+            <button onclick="closeSkill()" style="border:none; background:#ff5252; color:white; padding:5px 15px; border-radius:10px;">เสร็จแล้ว X</button>
+        </div>
+        <iframe id="web-iframe" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
 
 <script>
-    // Firebase & Global Vars
     const firebaseConfig = {
       apiKey: "AIzaSyAupdP390vgrb_r1JzMAWbxNCfR3Gf8f-E",
       authDomain: "chineseclass-teacherguan.firebaseapp.com",
@@ -106,89 +149,140 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let user = { name: "", coins: 0, avatar: "" };
-    let currentWord = "", currentStroke = "";
 
-    // กระดานวาดรูป
-    const canvas = document.getElementById('canvas-board');
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
+    let user = { name: "", class: "", coins: 0, pet: "panda" };
+    let masterData = {};
 
-    function openDrawing() {
-        document.getElementById('draw-modal').style.display = 'flex';
-        document.getElementById('stroke-guide').src = currentStroke;
-        canvas.width = 320; canvas.height = 320;
-        ctx.strokeStyle = "#444"; ctx.lineWidth = 8; ctx.lineCap = "round";
-        clearCanvas();
+    // --- Pet System ---
+    function setPet(el, type) {
+        document.querySelectorAll('.p-sel').forEach(i => i.style.borderColor="transparent");
+        el.style.borderColor="var(--soft-pink)"; user.pet = type;
     }
 
-    function closeDrawing() {
-        document.getElementById('draw-modal').style.display = 'none';
-        getPoints(20); alert("คุณครูตรวจแล้ว ให้คะแนนเต็มเลยจ๊ะ! 💎+20");
+    function updatePetUI() {
+        const img = document.getElementById('pet-img');
+        const rank = document.getElementById('pet-rank');
+        const fill = document.getElementById('evo-fill');
+        let p = (user.coins / 200) * 100;
+
+        if(user.coins < 50) {
+            img.src="https://img.icons8.com/clouds/200/egg.png"; rank.innerText="ร่างไข่ (Egg)";
+        } else if(user.coins < 150) {
+            img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`;
+            img.style.transform="scale(0.8)"; rank.innerText="ร่างตัวน้อย (Baby)";
+        } else {
+            img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`;
+            img.style.transform="scale(1.2)"; rank.innerText="ร่างเทพ (Hero!)"; p=100;
+        }
+        fill.style.width = p + "%";
     }
 
-    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    // --- Vocabulary System (ครูเน้นแยกหมวด) ---
+    db.ref('vocab_bank').on('value', (s) => {
+        const list = document.getElementById('vocab-list'); list.innerHTML = "";
+        const data = s.val(); if(!data) return;
 
-    // Touch Support
-    canvas.addEventListener('touchstart', (e) => { isDrawing = true; const t = e.touches[0]; draw(t.clientX, t.clientY, false); });
-    canvas.addEventListener('touchmove', (e) => { if(!isDrawing) return; const t = e.touches[0]; draw(t.clientX, t.clientY, true); e.preventDefault(); });
-    canvas.addEventListener('touchend', () => isDrawing = false);
+        const cats = {};
+        Object.values(data).forEach(v => {
+            if(!cats[v.cat]) cats[v.cat] = [];
+            cats[v.cat].push(v.word);
+        });
 
-    function draw(x, y, cont) {
-        const r = canvas.getBoundingClientRect();
-        const cx = x - r.left; const cy = y - r.top;
-        if(!cont) { ctx.beginPath(); ctx.moveTo(cx, cy); }
-        else { ctx.lineTo(cx, cy); ctx.stroke(); }
-    }
-
-    // AI Voice & Other
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'zh-CN';
-    recognition.onresult = (e) => {
-        if (e.results[0][0].transcript.includes(currentWord)) { alert("ชัดเจนจ๊ะ! 💎+10"); getPoints(10); }
-    };
-    function startAI() { recognition.start(); }
-
-    db.ref('lesson').on('value', (s) => {
-        const d = s.val() || { title: "บทเรียน", words: "你好", stroke: "" };
-        document.getElementById('lesson-title').innerText = d.title;
-        document.getElementById('lesson-content').innerText = d.words;
-        currentWord = d.words; currentStroke = d.stroke;
+        for(let c in cats) {
+            let section = `<div class="vocab-section"><div class="cat-title">📂 หมวด ${c}</div><div class="vocab-grid">`;
+            cats[c].forEach(word => {
+                section += `<div class="vocab-card"><b>${word}</b></div>`;
+            });
+            section += `</div></div>`;
+            list.innerHTML += section;
+        }
     });
 
-    function pickAvatar(img) {
-        document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
-        img.classList.add('selected'); user.avatar = img.src;
-    }
-
-    function doLogin() {
-        const n = document.getElementById('user-name').value;
-        if(!n || !user.avatar) return alert("กรุณาใส่ชื่อและเลือกตัวละครจ๊ะ");
-        user.name = n; document.getElementById('user-mascot').src = user.avatar;
+    // --- Core Navigation & Sync ---
+    function login() {
+        user.name = document.getElementById('u-name').value;
+        user.class = document.getElementById('u-class').value;
+        if(!user.name || !user.pet) return alert("กรอกชื่อและเลือกสัตว์เลี้ยงก่อนจ๊ะ");
+        document.getElementById('room-tag').innerText = "ห้อง " + user.class;
+        document.getElementById('room-name').innerText = user.class;
         document.getElementById('main-nav').style.display = 'grid';
-        navTo('page-home'); sync();
+        nav('page-home'); updatePetUI(); sync(); listenBoard();
     }
 
-    function getPoints(pts) { user.coins += pts; document.getElementById('coins').innerText = user.coins; sync(); }
-    function sync() { if(user.name) db.ref('students/' + user.name).update(user); }
-    function updateLesson() {
-        db.ref('lesson').set({
-            title: document.getElementById('edit-title').value,
-            words: document.getElementById('edit-words').value,
-            stroke: document.getElementById('edit-stroke').value
+    function openSkill(type) {
+        const link = masterData[type + 'Link'];
+        if(link) {
+            document.getElementById('web-title').innerText = "กำลังฝึกทักษะ: " + type.toUpperCase();
+            document.getElementById('web-view').style.display = 'flex';
+            document.getElementById('web-iframe').src = link;
+        } else { alert("รอคุณครูเพิ่มลิงก์บทเรียนนะจ๊ะ"); }
+    }
+
+    function closeSkill() {
+        document.getElementById('web-view').style.display = 'none';
+        document.getElementById('web-iframe').src = "";
+        user.coins += 10;
+        document.getElementById('score').innerText = user.coins;
+        updatePetUI(); sync();
+    }
+
+    function sync() { if(user.name) db.ref(`students/${user.class}/${user.name}`).set(user); }
+
+    db.ref('master').on('value', (s) => {
+        masterData = s.val() || {};
+        document.getElementById('cur-word').innerText = masterData.word || "ยินดีต้อนรับ";
+        document.getElementById('cur-cat').innerText = "หมวด: " + (masterData.cat || "ทั่วไป");
+        const news = masterData.news;
+        document.getElementById('news-area').style.display = news ? 'block' : 'none';
+        document.getElementById('news-txt').innerText = news || "";
+    });
+
+    function listenBoard() {
+        db.ref(`students/${user.class}`).orderByChild('coins').on('value', (s) => {
+            const list = document.getElementById('leader-items'); list.innerHTML = "";
+            let arr = []; s.forEach(c => arr.push(c.val()));
+            arr.reverse().forEach((st, i) => {
+                list.innerHTML += `<div style="display:flex; align-items:center; background:white; padding:10px; border-radius:15px; margin-bottom:8px;">
+                    <b style="width:25px;">${i+1}</b>
+                    <img src="https://img.icons8.com/clouds/100/${st.pet}.png" width="35">
+                    <div style="flex:1; margin-left:10px;">${st.name}</div>
+                    <b>${st.coins} 💎</b>
+                </div>`;
+            });
         });
-        alert("บันทึกแล้วจ๊ะ");
     }
 
-    function checkAdmin(el) {
-        if(prompt("รหัสครู:") === "1234") navTo('page-admin', el);
+    // --- Teacher Actions ---
+    function saveMaster() {
+        const w = document.getElementById('adm-word').value;
+        const c = document.getElementById('adm-cat').value;
+        db.ref('master').set({
+            word: w, cat: c, news: document.getElementById('adm-news').value,
+            readLink: document.getElementById('adm-r').value,
+            listenLink: document.getElementById('adm-l').value,
+            speakLink: document.getElementById('adm-s').value,
+            writeLink: document.getElementById('adm-w').value
+        });
+        if(w && c) db.ref('vocab_bank').push({ word: w, cat: c });
+        alert("บันทึกและเพิ่มเข้าคลังเรียบร้อยจ๊ะ!");
     }
 
-    function navTo(id, el) {
+    function nav(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
+        if(el) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+        }
     }
+
+    let clickTimer = 0;
+    document.body.addEventListener('click', (e) => {
+        if(e.clientX > window.innerWidth-60 && e.clientY > window.innerHeight-60) {
+            clickTimer++;
+            if(clickTimer === 3) { clickTimer=0; if(prompt("รหัสครู")==="1234") nav('page-admin'); }
+        } else { clickTimer=0; }
+    });
 </script>
 </body>
 </html>
