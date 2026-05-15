@@ -30,13 +30,13 @@
 
         .card { background: white; border-radius: 30px; padding: 20px; box-shadow: 0 10px 25px var(--shadow); margin-bottom: 15px; position: relative; }
 
-        /* Avatar Selection */
+        /* Avatar Grid */
         .av-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 15px 0; }
         .av-item { 
             background: white; border: 4px solid #f1f5f9; border-radius: 25px; padding: 10px; 
             cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center;
         }
-        .av-item img { width: 75px; height: 75px; object-fit: contain; }
+        .av-item img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 5px; }
         .av-item.selected { border-color: var(--orange); background: #fffcf0; transform: translateY(-8px); box-shadow: 0 10px 20px rgba(255,130,58,0.2); }
 
         /* Evolution Track */
@@ -59,7 +59,8 @@
         .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
         .nav-item.active { color: var(--purple); font-weight: bold; }
 
-        input, select { width: 100%; padding: 14px; border-radius: 18px; border: 2px solid #f1f5f9; margin-bottom: 10px; outline: none; background: #fcfcfc; }
+        label { font-size: 13px; font-weight: bold; color: var(--text-dark); display: block; margin-bottom: 5px; margin-left: 5px; }
+        input, select { width: 100%; padding: 14px; border-radius: 18px; border: 2px solid #f1f5f9; margin-bottom: 12px; outline: none; background: #fcfcfc; }
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,41,59,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 30px; }
@@ -69,22 +70,22 @@
 
 <div class="app-container">
     <div id="page-login" class="page active">
-        <h2 style="text-align: center; color: var(--orange); font-size: 30px; margin-top: 10px;">Teacher Guan</h2>
+        <h2 style="text-align: center; color: var(--orange); font-size: 30px; margin-top: 10px;">ห้องเรียน 关老师 🐼</h2>
         <div class="card" style="margin-top: 15px;">
             <input type="text" id="u-name" placeholder="ชื่อเล่นของหนู...">
             <select id="u-class-select"><option value="">กำลังโหลดห้องเรียน...</option></select>
-            <p style="font-size: 12px; color: #94a3b8; font-weight: 600; margin: 15px 0 10px;">✨ เลือกคู่หูของหนู (10 แบบ):</p>
+            <p style="font-size: 12px; color: #94a3b8; font-weight: 600; text-align:center;">✨ เลือกคู่หูของหนู ✨</p>
             <div class="av-grid">
-                <div class="av-item" onclick="selAv(this, 'panda')"><img src="https://img.icons8.com/clouds/150/panda.png"><span>แพนด้า</span></div>
-                <div class="av-item" onclick="selAv(this, 'rabbit')"><img src="https://img.icons8.com/clouds/150/rabbit.png"><span>กระต่าย</span></div>
-                <div class="av-item" onclick="selAv(this, 'chick')"><img src="https://img.icons8.com/clouds/150/chick.png"><span>กุ๊กไก่</span></div>
-                <div class="av-item" onclick="selAv(this, 'monkey')"><img src="https://img.icons8.com/clouds/150/monkey.png"><span>เจ้าลิง</span></div>
-                <div class="av-item" onclick="selAv(this, 'koala')"><img src="https://img.icons8.com/clouds/150/koala.png"><span>โคล่า</span></div>
-                <div class="av-item" onclick="selAv(this, 'apple')"><img src="https://img.icons8.com/clouds/150/apple.png"><span>แอปเปิ้ล</span></div>
-                <div class="av-item" onclick="selAv(this, 'tangerine')"><img src="https://img.icons8.com/clouds/150/tangerine.png"><span>ส้ม</span></div>
-                <div class="av-item" onclick="selAv(this, 'banana')"><img src="https://img.icons8.com/clouds/150/banana.png"><span>กล้วย</span></div>
-                <div class="av-item" onclick="selAv(this, 'grape')"><img src="https://img.icons8.com/clouds/150/grape.png"><span>องุ่น</span></div>
-                <div class="av-item" onclick="selAv(this, 'strawberry')"><img src="https://img.icons8.com/clouds/150/strawberry.png"><span>เบอร์รี่</span></div>
+                <div class="av-item" onclick="selAv(this, 'panda')"><img src="https://cdn-icons-png.flaticon.com/512/235/235384.png"><span>แพนด้า</span></div>
+                <div class="av-item" onclick="selAv(this, 'rabbit')"><img src="https://cdn-icons-png.flaticon.com/512/2613/2613149.png"><span>กระต่าย</span></div>
+                <div class="av-item" onclick="selAv(this, 'chick')"><img src="https://cdn-icons-png.flaticon.com/512/2632/2632839.png"><span>กุ๊กไก่</span></div>
+                <div class="av-item" onclick="selAv(this, 'monkey')"><img src="https://cdn-icons-png.flaticon.com/512/2991/2991157.png"><span>เจ้าลิง</span></div>
+                <div class="av-item" onclick="selAv(this, 'koala')"><img src="https://cdn-icons-png.flaticon.com/512/3069/3069225.png"><span>โคล่า</span></div>
+                <div class="av-item" onclick="selAv(this, 'apple')"><img src="https://cdn-icons-png.flaticon.com/512/415/415682.png"><span>แอปเปิ้ล</span></div>
+                <div class="av-item" onclick="selAv(this, 'tangerine')"><img src="https://cdn-icons-png.flaticon.com/512/1728/1728739.png"><span>ส้ม</span></div>
+                <div class="av-item" onclick="selAv(this, 'banana')"><img src="https://cdn-icons-png.flaticon.com/512/2909/2909761.png"><span>กล้วย</span></div>
+                <div class="av-item" onclick="selAv(this, 'grape')"><img src="https://cdn-icons-png.flaticon.com/512/1155/1155280.png"><span>องุ่น</span></div>
+                <div class="av-item" onclick="selAv(this, 'strawberry')"><img src="https://cdn-icons-png.flaticon.com/512/590/590685.png"><span>เบอร์รี่</span></div>
             </div>
             <button class="btn-skill" style="background: var(--purple);" onclick="login()">เข้าห้องเรียน ➔</button>
         </div>
@@ -101,7 +102,7 @@
             <h3 id="pet-status" style="font-size: 16px; margin-top: 10px; color: var(--orange);">ร่างไข่</h3>
             <div class="evo-track"><div id="pet-fill" class="evo-fill"></div></div>
             <hr style="border:0; border-top:2px solid #f8fafc; margin:20px 0;">
-            <p id="main-cat" style="font-size: 11px; font-weight: bold; color: var(--purple);">บทเรียนวันนี้</p>
+            <p id="main-cat" style="font-size: 12px; font-weight: bold; color: var(--purple); text-transform: uppercase;">หมวดหมู่</p>
             <h1 id="main-word" style="font-size: 55px; color: var(--text-dark);">...</h1>
         </div>
         
@@ -124,19 +125,26 @@
     </div>
 
     <div id="page-admin" class="page">
-        <h3>Admin Settings</h3>
-        <div class="card" style="text-align:left; font-size:13px;">
-            <b>ห้องเรียน:</b> <input type="text" id="adm-rooms">
-            <hr>
-            <b>รหัสลับผ่านด่าน:</b> <input type="text" id="adm-code">
-            <b>บทเรียน/ตัวจีน:</b> <input type="text" id="adm-cat"><input type="text" id="adm-word">
-            <hr>
-            <b>ลิงก์ทักษะ:</b>
-            <input type="text" id="l-r" placeholder="Read"><input type="text" id="l-l" placeholder="Listen">
-            <input type="text" id="l-s" placeholder="Speak"><input type="text" id="l-w" placeholder="Write">
-            <button class="btn-skill" style="background:var(--purple);" onclick="saveAdmin()">บันทึก ➔</button>
+        <h2 style="color: var(--purple); margin-bottom: 15px;">⚙️ Admin Settings</h2>
+        <div class="card" style="text-align:left;">
+            <label>🏫 รายชื่อห้องเรียน (แยกด้วย , )</label>
+            <input type="text" id="adm-rooms" placeholder="ม.1, ม.2">
+            <hr style="border:0; border-top:1px dashed #eee; margin:10px 0;">
+            <label>🔑 รหัสลับผ่านด่าน</label>
+            <input type="text" id="adm-code" placeholder="เช่น 888">
+            <label>📁 หมวดหมู่บทเรียน</label>
+            <input type="text" id="adm-cat" placeholder="เช่น ครอบครัว">
+            <label>🏮 ตัวจีนหลัก</label>
+            <input type="text" id="adm-word" placeholder="เช่น 老师">
+            <hr style="border:0; border-top:1px dashed #eee; margin:10px 0;">
+            <label>🔗 ลิงก์ทักษะ (Wordwall)</label>
+            <input type="text" id="l-r" placeholder="Read Link">
+            <input type="text" id="l-l" placeholder="Listen Link">
+            <input type="text" id="l-s" placeholder="Speak Link">
+            <input type="text" id="l-w" placeholder="Write Link">
+            <button class="btn-skill" style="background:var(--purple); margin-top:10px;" onclick="saveAdmin()">บันทึกข้อมูล ➔</button>
         </div>
-        <button class="btn-skill" style="background:#94a3b8; margin-top:10px;" onclick="nav('page-home')">กลับ</button>
+        <button class="btn-skill" style="background:#94a3b8;" onclick="nav('page-home')">กลับหน้าหลัก</button>
     </div>
 
     <div id="nav-bar" class="nav-bar" style="display:none;">
@@ -177,16 +185,18 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let user = { name: "", class: "", coins: 0, pet: "" };
+    let user = { name: "", class: "", coins: 0, pet: "", petImg: "" };
     let curData = {};
 
     function selAv(el, type) {
         document.querySelectorAll('.av-item').forEach(i => i.classList.remove('selected'));
-        el.classList.add('selected'); user.pet = type;
+        el.classList.add('selected'); 
+        user.pet = type;
+        user.petImg = el.querySelector('img').src;
     }
 
     db.ref('settings/rooms').on('value', (s) => {
-        const rooms = s.val() ? s.val().split(',') : ['ห้อง A'];
+        const rooms = s.val() ? s.val().split(',') : ['ม.1'];
         const select = document.getElementById('u-class-select');
         select.innerHTML = "";
         rooms.forEach(r => { select.innerHTML += `<option value="${r.trim()}">${r.trim()}</option>`; });
@@ -210,9 +220,19 @@
     function updatePet() {
         const img = document.getElementById('pet-img'), status = document.getElementById('pet-status'), fill = document.getElementById('pet-fill');
         let p = (user.coins / 200) * 100;
-        if(user.coins < 50) { img.src="https://img.icons8.com/clouds/200/egg.png"; status.innerText="ร่างไข่แสนรู้"; }
-        else if(user.coins < 150) { img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`; img.style.transform="scale(0.8)"; status.innerText="ร่างตัวน้อยแสนซน"; }
-        else { img.src=`https://img.icons8.com/clouds/200/${user.pet}.png`; img.style.transform="scale(1.1)"; status.innerText="ร่างสมบูรณ์สุดเท่!"; p=100; }
+        if(user.coins < 50) { 
+            img.src="https://cdn-icons-png.flaticon.com/512/3067/3067160.png"; // ไอคอนไข่
+            status.innerText="ร่างไข่แสนรู้"; 
+        } else if(user.coins < 150) { 
+            img.src = user.petImg; 
+            img.style.transform="scale(0.8)"; 
+            status.innerText="ร่างตัวน้อยแสนซน"; 
+        } else { 
+            img.src = user.petImg; 
+            img.style.transform="scale(1.2)"; 
+            status.innerText="ร่างสมบูรณ์สุดเท่!"; 
+            p=100; 
+        }
         fill.style.width = p + "%";
     }
 
@@ -221,7 +241,7 @@
     function goLink(type) {
         const link = curData[type + 'Link'];
         if(link) { document.getElementById('web-overlay').style.display = 'flex'; document.getElementById('web-frame').src = link; }
-        else alert("รอครูลงลิงก์นะจ๊ะ");
+        else alert("รอคุณครูลงลิงก์นะจ๊ะ");
     }
 
     function finishSkill() {
@@ -244,6 +264,8 @@
         document.getElementById('main-word').innerText = curData.word || "สวัสดี";
         document.getElementById('main-cat').innerText = curData.cat || "บทเรียนใหม่";
         document.getElementById('adm-code').value = curData.secretCode || "";
+        document.getElementById('adm-cat').value = curData.cat || "";
+        document.getElementById('adm-word').value = curData.word || "";
     });
 
     db.ref('vocab_bank').on('value', (s) => {
@@ -252,7 +274,7 @@
         const cats = {}; Object.values(data).forEach(v => { if(!cats[v.cat]) cats[v.cat] = []; cats[v.cat].push(v.word); });
         for(let c in cats) {
             let sec = `<div style="margin-top:15px;"><span style="background:var(--purple); color:white; padding:4px 12px; border-radius:15px; font-size:11px;">📂 ${c}</span><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">`;
-            cats[c].forEach(w => sec += `<div class="card" style="margin:0; padding:12px; font-size:22px; font-weight:bold;">${w}</div>`);
+            cats[c].forEach(w => sec += `<div class="card" style="margin:0; padding:12px; font-size:22px; font-weight:bold; text-align:center;">${w}</div>`);
             list.innerHTML += sec + `</div></div>`;
         }
     });
@@ -264,7 +286,7 @@
             arr.reverse().forEach((st, i) => {
                 list.innerHTML += `<div class="card" style="display:flex; align-items:center; padding:10px 15px; margin-bottom:10px;">
                     <b style="width:25px;">${i+1}</b>
-                    <img src="https://img.icons8.com/clouds/100/${st.pet}.png" width="35" style="margin-right:10px;">
+                    <img src="${st.petImg}" width="35" style="margin-right:10px;">
                     <div style="flex:1; font-weight:600;">${st.name}</div><b>${st.coins} 💎</b>
                 </div>`;
             });
@@ -280,7 +302,7 @@
             speakLink: document.getElementById('l-s').value, writeLink: document.getElementById('l-w').value
         });
         if(w && c) db.ref('vocab_bank').push({ word: w, cat: c });
-        alert("บันทึกแล้วจ้า!");
+        alert("บันทึกข้อมูลเรียบร้อยแล้วจ้า!");
     }
 
     function nav(id, el) {
@@ -292,7 +314,7 @@
     let adminC = 0;
     document.body.addEventListener('click', (e) => {
         if(e.clientX > window.innerWidth-60 && e.clientY > window.innerHeight-60) {
-            adminC++; if(adminC === 3) { adminC=0; if(prompt("Pass?")==="1234") nav('page-admin'); }
+            adminC++; if(adminC === 3) { adminC=0; if(prompt("คุณครูคะ ใส่รหัสเข้าหน้าตั้งค่าค่ะ")==="1234") nav('page-admin'); }
         } else adminC = 0;
     });
 </script>
